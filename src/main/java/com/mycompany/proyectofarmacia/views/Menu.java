@@ -68,6 +68,10 @@ class LaminaMenu extends JPanel implements Runnable {
     PanelVentas panelVentas = new PanelVentas();
 
     PanelInventario panelInventario = new PanelInventario();
+    
+    PanelHistorial panelHistorial = new PanelHistorial();
+    
+    PanelFarmaceuticos panelFarma = new PanelFarmaceuticos();
 
     JLabel lblhora;
 
@@ -108,6 +112,10 @@ class LaminaMenu extends JPanel implements Runnable {
         ventas.addActionListener(new accion());
 
         inventario.addActionListener(new accion());
+        
+        histventas.addActionListener(new accion());
+        
+        farmaceuticos.addActionListener(new accion());
 
         desbtn();
 
@@ -170,6 +178,10 @@ class LaminaMenu extends JPanel implements Runnable {
             ventas.setEnabled(true);
 
             inventario.setEnabled(true);
+            
+            histventas.setEnabled(true);
+            
+            farmaceuticos.setEnabled(true);
 
         } else if (panelVentas.isVisible()) {
 
@@ -178,6 +190,10 @@ class LaminaMenu extends JPanel implements Runnable {
             ventas.setEnabled(false);
 
             inventario.setEnabled(true);
+            
+            histventas.setEnabled(true);
+            
+            farmaceuticos.setEnabled(true);
 
         } else if (panelInventario.isVisible()) {
 
@@ -186,6 +202,34 @@ class LaminaMenu extends JPanel implements Runnable {
             ventas.setEnabled(true);
 
             inventario.setEnabled(false);
+            
+            histventas.setEnabled(true);
+            
+            farmaceuticos.setEnabled(true);
+
+        }else if (panelHistorial.isVisible()) {
+
+            princi.setEnabled(true);
+
+            ventas.setEnabled(true);
+
+            inventario.setEnabled(true);
+            
+            histventas.setEnabled(false);
+            
+            farmaceuticos.setEnabled(true);
+
+        }else if (panelFarma.isVisible()) {
+
+            princi.setEnabled(true);
+
+            ventas.setEnabled(true);
+
+            inventario.setEnabled(true);
+            
+            histventas.setEnabled(true);
+            
+            farmaceuticos.setEnabled(false);
 
         }
 
@@ -206,6 +250,10 @@ class LaminaMenu extends JPanel implements Runnable {
                 panelVentas.setVisible(false);
 
                 panelInventario.setVisible(false);
+                
+                panelHistorial.setVisible(false);
+                
+                panelFarma.setVisible(false);
 
                 add(principal, BorderLayout.CENTER);
 
@@ -220,6 +268,10 @@ class LaminaMenu extends JPanel implements Runnable {
                 panelVentas.setVisible(true);
 
                 panelInventario.setVisible(false);
+                
+                panelHistorial.setVisible(false);
+                
+                panelFarma.setVisible(false);
 
                 add(panelVentas, BorderLayout.CENTER);
 
@@ -234,8 +286,48 @@ class LaminaMenu extends JPanel implements Runnable {
                 panelVentas.setVisible(false);
 
                 panelInventario.setVisible(true);
+                
+                panelHistorial.setVisible(false);
+                
+                panelFarma.setVisible(false);
 
                 add(panelInventario, BorderLayout.CENTER);
+
+                validate();
+
+                desbtn();
+
+            } else if (press == histventas) {
+
+                principal.setVisible(false);
+
+                panelVentas.setVisible(false);
+
+                panelInventario.setVisible(false);
+                
+                panelHistorial.setVisible(true);
+                
+                panelFarma.setVisible(false);
+
+                add(panelHistorial, BorderLayout.CENTER);
+
+                validate();
+
+                desbtn();
+
+            }else if (press == farmaceuticos) {
+
+                principal.setVisible(false);
+
+                panelVentas.setVisible(false);
+
+                panelInventario.setVisible(false);
+                
+                panelHistorial.setVisible(false);
+                
+                panelFarma.setVisible(true);
+
+                add(panelFarma, BorderLayout.CENTER);
 
                 validate();
 

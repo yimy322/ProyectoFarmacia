@@ -31,7 +31,7 @@ public class PanelVentas extends JPanel {
     JButton busProducto, agregar, eliminar;
 
 //    ------  
-    JButton realizarVenta, imprimir;
+    JButton realizarVenta, borrarVenta;
 
     Box cajavertical = Box.createVerticalBox();
 
@@ -77,7 +77,7 @@ public class PanelVentas extends JPanel {
 
         cajavertical.add(caja2);
 
-        caja2.add(Box.createHorizontalStrut(700));
+        caja2.add(Box.createHorizontalStrut(750));
         
 
 //        Caja productos
@@ -147,7 +147,7 @@ public class PanelVentas extends JPanel {
         
         JTextPane area = new JTextPane();
         
-        area.setPreferredSize(new Dimension(989, 200));
+        area.setPreferredSize(new Dimension(1049, 200));
         
         JScrollPane scroll = new JScrollPane(area);
         
@@ -179,11 +179,23 @@ public class PanelVentas extends JPanel {
 
         Box caja3 = Box.createVerticalBox();
 
-        realizarVenta = new JButton("Realizar venta");
+        realizarVenta = new JButton(tamimage("src/main/java/resources/venta.png"));
+        
+        borrarVenta = new JButton(tamimage("src/main/java/resources/basura.png"));
+        
+//        Para que aparazca texto cuando nos ubicamos encima del button
+        
+        realizarVenta.setToolTipText("Realizar venta");
+        
+        borrarVenta.setToolTipText("Limpiar");
 
-        caja3.add(Box.createVerticalStrut(220));
+        caja3.add(Box.createVerticalStrut(180));
 
         caja3.add(realizarVenta);
+        
+        caja3.add(Box.createVerticalStrut(10));
+        
+        caja3.add(borrarVenta);
 
         izquierda.add(caja3);
 
@@ -196,7 +208,7 @@ public class PanelVentas extends JPanel {
 
         lbl = new JLabel(lbl1);
 
-        txt = new JTextField(10);
+        txt = new JTextField(11);
 
         caja1.add(lbl);
 
@@ -212,7 +224,7 @@ public class PanelVentas extends JPanel {
 
         lbl = new JLabel(lbl1);
 
-        txt = new JTextField(10);
+        txt = new JTextField(11);
 
         caja2.add(lbl);
 
@@ -231,11 +243,11 @@ public class PanelVentas extends JPanel {
 //        En caso sea la caja de descripcion la hacemos mas grande
         if (lbl1.equals("Descripcion")) {
 
-            txt = new JTextField(15);
+            txt = new JTextField(16);
 
         } else {
 
-            txt = new JTextField(8);
+            txt = new JTextField(9);
 
         }
 
@@ -256,10 +268,26 @@ public class PanelVentas extends JPanel {
         {"101", "Sachin", "700000"}};
         String column[] = {"ID", "NAME", "SALARY"};
         JTable jt = new JTable(data, column);
-        jt.setPreferredScrollableViewportSize(new Dimension(989, 100));
+        jt.setPreferredScrollableViewportSize(new Dimension(1049, 100));
         JScrollPane sp=new JScrollPane(jt);   
         cajaTabla.add(sp);
         cajaTabla.add(Box.createVerticalStrut(10));
+
+    }
+    
+//    Para ajustar el tamaño de una imagen
+    
+    public ImageIcon tamimage(String url) {
+
+        ImageIcon icono = new ImageIcon(url);
+
+        Image imagen = icono.getImage();
+
+        Image conversion = imagen.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+        ImageIcon resultado = new ImageIcon(conversion);
+
+        return resultado;
 
     }
 

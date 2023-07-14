@@ -1,4 +1,6 @@
 com/mycompany/proyectofarmacia/views/LaminaMenu.class
+com/mycompany/proyectofarmacia/views/PanelFarmaceuticos.class
+com/mycompany/proyectofarmacia/views/PanelHistorial.class
 com/mycompany/proyectofarmacia/views/TextPrompt.class
 com/mycompany/proyectofarmacia/views/Login.class
 com/mycompany/proyectofarmacia/views/TextPrompt$Show.class
