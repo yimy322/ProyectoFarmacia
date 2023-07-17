@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
+import static com.mycompany.proyectofarmacia.controllers.LoginController.NAME;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,24 +16,13 @@ import javax.swing.*;
  *
  * @author yimy
  */
-public class Menu {
 
-    public static void main(String[] args) {
+public class Menu extends JFrame {
 
-        MarcoMenu marcopro = new MarcoMenu();
+    public Menu() {
 
-        marcopro.setVisible(true);
-
-        marcopro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    }
-
-}
-
-class MarcoMenu extends JFrame {
-
-    public MarcoMenu() {
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         setResizable(false);
 
         setSize(1200, 600);
@@ -126,7 +116,7 @@ class LaminaMenu extends JPanel implements Runnable {
 
         JLabel lbl = new JLabel(tamimage("src/main/java/resources/usuario.png"));
 
-        JLabel usuario = new JLabel("yimylon");
+        JLabel usuario = new JLabel(NAME);
 
         JLabel espacio = new JLabel("          ");
 

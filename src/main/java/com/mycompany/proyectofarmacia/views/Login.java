@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
+import com.mycompany.proyectofarmacia.controllers.LoginController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -14,6 +15,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +33,8 @@ import javax.swing.border.LineBorder;
 public class Login extends JFrame{
     
     public Login() {
+        
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         setResizable(false);
 
@@ -40,13 +45,10 @@ public class Login extends JFrame{
         setTitle("Login");
 
         Toolkit pantalla = Toolkit.getDefaultToolkit();
-        
 
         Image icono = pantalla.getImage("src/main/java/resources/logo.png");
 
         setIconImage(icono);
-        
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         add(new LaminaLogin());
 
@@ -54,6 +56,10 @@ public class Login extends JFrame{
     
 }
 class LaminaLogin extends JPanel {
+    
+    JTextField txtuser;
+    
+    JPasswordField txtpass;
 
     public LaminaLogin() {
 
@@ -91,7 +97,7 @@ class LaminaLogin extends JPanel {
         //--AMBOS SON DEL PAQUETE SWING
         JLabel user = new JLabel(tamima("src/main/java/resources/user.png"));
 
-        JTextField txtuser = new JTextField();
+        txtuser = new JTextField();
 
         LineBorder lineBorder = new LineBorder(Color.white, 5, true);
 
@@ -105,7 +111,7 @@ class LaminaLogin extends JPanel {
 
         JLabel pass = new JLabel(tamima("src/main/java/resources/pass.png"));
 
-        JPasswordField txtpass = new JPasswordField();
+        txtpass = new JPasswordField();
 
         txtpass.setBorder(lineBorder);
 
@@ -133,21 +139,29 @@ class LaminaLogin extends JPanel {
         laminabtn.setLayout(new FlowLayout());
 
         JButton btningreso = new JButton("Ingresar");
-
-        JButton btnregistro = new JButton("Registrarse");
+        
+        JButton btnregistro = new JButton("Salir");
 
         btningreso.setFont(new Font("Tahoma", Font.BOLD, 14));
-
+        
         btnregistro.setFont(new Font("Tahoma", Font.BOLD, 14));
 
         btningreso.setBackground(Color.CYAN);
-
+        
         btnregistro.setBackground(Color.RED);
-
+        
         btnregistro.setForeground(Color.WHITE);
+        
+//        Agregamos la funcionalidad al jbutton
+
+        btningreso.addActionListener(new accion());
+        
+        btnregistro.addActionListener(new salir());
+        
+//        -------------------
 
         laminabtn.add(btningreso);
-
+        
         laminabtn.add(btnregistro);
 
         add(laminabtn, BorderLayout.SOUTH);
@@ -160,7 +174,32 @@ class LaminaLogin extends JPanel {
         laminabtn.setBackground(new Color(45, 45, 45));
 
     }
+    
+    public class accion implements ActionListener{
 
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            
+            String usuario = txtuser.getText();
+            String password = txtpass.getText();
+            
+            LoginController controlador = new LoginController(usuario, password);
+
+        }
+        
+    }
+    
+    public class salir implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            
+            System.exit(0);
+
+        }
+        
+    }
+    
     //ESTE METODO ME PERMITE REDIMENSIONAR EL TAMAÑO DE UNA IMAGEN
     //ME RETORNA UN IMAGEICON
     private ImageIcon tamima(String url) {

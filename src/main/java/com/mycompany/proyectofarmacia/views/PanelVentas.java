@@ -4,8 +4,15 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
+import com.mycompany.proyectofarmacia.models.Conexion;
+import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
+import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
+import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -40,13 +47,13 @@ public class PanelVentas extends JPanel {
     Box caja2 = Box.createHorizontalBox();
 
     Box cajaProductos = Box.createHorizontalBox();
-    
+
     Box cajaTabla = Box.createHorizontalBox();
-    
+
     Box caja3 = Box.createHorizontalBox();
 
     Box cajaArea = Box.createHorizontalBox();
-    
+
     public PanelVentas() {
 
         setLayout(new BorderLayout());
@@ -78,7 +85,6 @@ public class PanelVentas extends JPanel {
         cajavertical.add(caja2);
 
         caja2.add(Box.createHorizontalStrut(750));
-        
 
 //        Caja productos
         cajaProductos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Producto"));
@@ -104,17 +110,14 @@ public class PanelVentas extends JPanel {
         cajavertical.add(Box.createVerticalStrut(10));
 
 //        Tabla
-
         crearTabla();
-        
+
 //        cajaTabla.setBorder(BorderFactory.createLineBorder(Color.black));
-        
         cajavertical.add(cajaTabla);
-        
+
         cajavertical.add(Box.createVerticalStrut(10));
-        
+
 //        Cantidad y botones
-        
         cantidad = new JLabel("Cantidad");
 
         txtCantidad = new JTextField(10);
@@ -126,48 +129,47 @@ public class PanelVentas extends JPanel {
         caja3.add(txtCantidad);
 
         caja3.add(Box.createHorizontalStrut(15));
-        
+
         agregar = new JButton("Agregar", new ImageIcon("src/main/java/resources/agregar.png"));
-        
+
         caja3.add(agregar);
-        
+
         caja3.add(Box.createHorizontalStrut(15));
-        
+
         eliminar = new JButton("Eliminar ultimo", new ImageIcon("src/main/java/resources/eliminar.png"));
-        
+
         caja3.add(eliminar);
-        
+
         caja3.add(Box.createHorizontalStrut(15));
 
         cajavertical.add(caja3);
-        
+
         cajavertical.add(Box.createVerticalStrut(10));
-        
+
 //        Creamos el pane llamando a la funcion correspondiente
-        
         JTextPane area = new JTextPane();
-        
+
         area.setPreferredSize(new Dimension(1049, 200));
-        
+
         JScrollPane scroll = new JScrollPane(area);
-        
+
         cajavertical.add(scroll);
-        
+
         cajavertical.add(Box.createVerticalStrut(10));
 
 //        -------------------
         centro.add(cajavertical);
-        
+
         centro.add(caja1);
-        
+
         centro.add(caja2);
 
         centro.add(cajaProductos);
-        
+
         centro.add(cajaTabla);
-        
+
         centro.add(caja3);
-        
+
         centro.add(scroll);
 
         add(centro, BorderLayout.CENTER);
@@ -180,21 +182,20 @@ public class PanelVentas extends JPanel {
         Box caja3 = Box.createVerticalBox();
 
         realizarVenta = new JButton(tamimage("src/main/java/resources/venta.png"));
-        
+
         borrarVenta = new JButton(tamimage("src/main/java/resources/basura.png"));
-        
+
 //        Para que aparazca texto cuando nos ubicamos encima del button
-        
         realizarVenta.setToolTipText("Realizar venta");
-        
+
         borrarVenta.setToolTipText("Limpiar");
 
         caja3.add(Box.createVerticalStrut(180));
 
         caja3.add(realizarVenta);
-        
+
         caja3.add(Box.createVerticalStrut(10));
-        
+
         caja3.add(borrarVenta);
 
         izquierda.add(caja3);
@@ -262,21 +263,72 @@ public class PanelVentas extends JPanel {
     }
 
     public void crearTabla() {
-        
-        String data[][] = {{"101", "Amit", "670000"},
-        {"102", "Jai", "780000"},
-        {"101", "Sachin", "700000"}};
-        String column[] = {"ID", "NAME", "SALARY"};
-        JTable jt = new JTable(data, column);
-        jt.setPreferredScrollableViewportSize(new Dimension(1049, 100));
-        JScrollPane sp=new JScrollPane(jt);   
-        cajaTabla.add(sp);
-        cajaTabla.add(Box.createVerticalStrut(10));
+
+        //        Cargamos los datos de la tabla con un select
+        Connection conexion = null;
+
+        try {
+            conexion = Conexion.getConnection();
+            if (conexion.getAutoCommit()) {
+                conexion.setAutoCommit(false);
+            }
+            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+
+            //aca se hace las consultas
+            java.util.List<ProductoDTO> productos = productoDao.select();
+
+            Object ob[] = new Object[7];
+
+//            Creacion de la tabla
+            JTable jt = new JTable();
+
+            DefaultTableModel model = new DefaultTableModel();
+
+            model.addColumn("ID");
+            model.addColumn("Nombre");
+            model.addColumn("Codigo");
+            model.addColumn("Laboratorio");
+            model.addColumn("Stock");
+            model.addColumn("Precio");
+            model.addColumn("Descripcion");
+
+            jt.setModel(model);
+
+            for (int i = 0; i < productos.size(); i++) {
+                ob[0] = productos.get(i).getIdProducto();
+                ob[1] = productos.get(i).getNombre();
+                ob[2] = productos.get(i).getCodigo();
+                ob[3] = productos.get(i).getLaboratorio();
+                ob[4] = productos.get(i).getStock();
+                ob[5] = productos.get(i).getPrecio();
+                ob[6] = productos.get(i).getDescripcion();
+                model.addRow(ob);
+            }
+
+            jt.setModel(model);
+
+            jt.setPreferredScrollableViewportSize(new Dimension(1050, 110));
+            JScrollPane sp = new JScrollPane(jt);
+
+            cajaTabla.add(sp);
+            cajaTabla.add(Box.createVerticalStrut(10));
+
+            //-----------------------------
+            conexion.commit();
+            System.out.println("se hizo commit");
+        } catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            System.out.println("Entramos al rollback");
+            try {
+                conexion.rollback();
+            } catch (SQLException ex1) {
+                ex.printStackTrace(System.out);
+            }
+        }
 
     }
-    
+
 //    Para ajustar el tamaño de una imagen
-    
     public ImageIcon tamimage(String url) {
 
         ImageIcon icono = new ImageIcon(url);
