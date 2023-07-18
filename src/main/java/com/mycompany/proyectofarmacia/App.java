@@ -13,7 +13,11 @@ public class App {
     
     public static void main(String[] args) {
         
-        LoginController login = new LoginController();
+        Login vista = new Login();
+        
+        LoginController login = new LoginController(vista);
+        
+        login.iniciarVista();
         
     }
     

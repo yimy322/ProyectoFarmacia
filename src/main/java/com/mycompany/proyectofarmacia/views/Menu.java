@@ -4,6 +4,7 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
+import com.mycompany.proyectofarmacia.controllers.InventarioController;
 import static com.mycompany.proyectofarmacia.controllers.LoginController.NAME;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,6 @@ import javax.swing.*;
  *
  * @author yimy
  */
-
 public class Menu extends JFrame {
 
     public Menu() {
@@ -224,9 +224,11 @@ class LaminaMenu extends JPanel implements Runnable {
         }
 
     }
-
+    
+    InventarioController inventarioC = new InventarioController(panelInventario);
+    
     class accion implements ActionListener {
-
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             // TODO Auto-generated method stub
@@ -239,7 +241,7 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 panelVentas.setVisible(false);
 
-                panelInventario.setVisible(false);
+                inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 
@@ -257,7 +259,7 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 panelVentas.setVisible(true);
 
-                panelInventario.setVisible(false);
+                inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 
@@ -274,8 +276,10 @@ class LaminaMenu extends JPanel implements Runnable {
                 principal.setVisible(false);
 
                 panelVentas.setVisible(false);
-
-                panelInventario.setVisible(true);
+                
+                inventarioC.iniciarVista();
+                
+                inventarioC.actualizarFilas();
                 
                 panelHistorial.setVisible(false);
                 
@@ -293,7 +297,7 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 panelVentas.setVisible(false);
 
-                panelInventario.setVisible(false);
+                inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(true);
                 
@@ -311,7 +315,7 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 panelVentas.setVisible(false);
 
-                panelInventario.setVisible(false);
+                inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 

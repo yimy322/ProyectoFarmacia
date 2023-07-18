@@ -14,11 +14,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -29,18 +32,16 @@ import javax.swing.table.TableColumn;
  */
 public class PanelInventario extends JPanel {
 
-    InventarioController controller = new InventarioController();
-
     Box caja1, caja2, cajaTabla, cajaEditar, caja3;
 
     //    Labels del producto
-    JLabel codProducto, nomProducto, labProducto, stock, descripcion, precio;
+    public JLabel codProducto, nomProducto, labProducto, stock, descripcion, precio;
 
     //    TextField del producto
-    JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtCantidad, txtPrecio;
+    public JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtPrecio;
 
     // Botones
-    JButton btnRegistrar, btnLimpiar, btnEditar, btnEliminar;
+    public JButton btnRegistrar, btnLimpiar, btnEditar, btnEliminar;
 
     //    Labels de editar
     JLabel id, codEditar, nomEditar, labEditar, Edistock, Edidescripcion, Ediprecio;
@@ -48,11 +49,12 @@ public class PanelInventario extends JPanel {
     //    TextField de editar
     JTextField txtId, txtCodEditar, txtNomEditar, txtLabEditar, txtEdiStock, txtEdiDescripcion, txtEdiPrecio;
 
-    //            Creacion de la tabla
-    JTable jt = new JTable();
+    //Creacion de la tabla
+    public JTable jt;
 
-    DefaultTableModel model = new DefaultTableModel();
+    public DefaultTableModel model;
 
+//    -----------
     public PanelInventario() {
 
         setLayout(new FlowLayout());
@@ -71,30 +73,101 @@ public class PanelInventario extends JPanel {
 
         cajaVertical.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Agregar Producto"));
 
-        crearcajasProducto("Nombre", nomProducto, txtNomProducto);
+//        Creacion de cajas
+        //Labels
+        nomProducto = new JLabel("Nombre");
 
-        crearcajasProducto("Codigo", codProducto, txtCodProducto);
+        codProducto = new JLabel("Codigo");
 
-        crearcajasProducto("Laboratorio", labProducto, txtLabProducto);
+        labProducto = new JLabel("Laboratorio");
 
-        crearcajasProducto("Stock", stock, txtStock);
+        stock = new JLabel("Stock");
 
-        crearcajasProducto("Precio", precio, txtPrecio);
+        precio = new JLabel("Precio");
+
+        descripcion = new JLabel("Descripcion");
+
+        //txts
+        txtNomProducto = new JTextField(12);
+
+        txtCodProducto = new JTextField(8);
+
+        txtLabProducto = new JTextField(12);
+
+        txtStock = new JTextField(8);
+
+        txtDescripcion = new JTextField(14);
+
+        txtPrecio = new JTextField(10);
+
+        //Agregamos el codigo a la caja txtcodproducto con la funcion 
+        txtCodProducto.setText(cadenaAleatoria());
+        txtCodProducto.setEnabled(false);
+
+        //Validamos la entrada de solo numeros a algunas cajas
+        txtStock.addKeyListener(new eventoTeclado());
+
+        txtPrecio.addKeyListener(new eventoTeclado());
+
+        //Agregamos a la caja
+        caja1.add(nomProducto);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtNomProducto);
+
+        caja1.add(Box.createHorizontalStrut(10));
+
+        caja1.add(codProducto);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtCodProducto);
+
+        caja1.add(Box.createHorizontalStrut(10));
+
+        caja1.add(labProducto);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtLabProducto);
+
+        caja1.add(Box.createHorizontalStrut(10));
+
+        caja1.add(stock);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtStock);
+
+        caja1.add(Box.createHorizontalStrut(10));
+
+        caja1.add(precio);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtPrecio);
+
+        caja1.add(Box.createHorizontalStrut(10));
+
+        caja1.add(descripcion);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtDescripcion);
+
+        caja1.add(Box.createHorizontalStrut(10));
 
         cajaVertical.add(caja1);
 
         cajaVertical.add(Box.createVerticalStrut(10));
 
-        crearcajasProducto1("Descripcion", descripcion, txtDescripcion);
-
+//        -----------------------------------------------------------------------
         caja2.add(Box.createHorizontalStrut(30));
 
         btnRegistrar = new JButton("Registrar", new ImageIcon("src/main/java/resources/agregar.png"));
 
         btnLimpiar = new JButton("Limpiar", new ImageIcon("src/main/java/resources/eliminar.png"));
-
-//        Agregando acciones a los buttons
-        btnRegistrar.addActionListener(new accion());
 
 //        --------------------------------
         cajaTabla = Box.createHorizontalBox();
@@ -148,6 +221,7 @@ public class PanelInventario extends JPanel {
 
         btnEliminar = new JButton("Borrar", new ImageIcon("src/main/java/resources/borrar.png"));
 
+//        -------------------
         caja3.add(btnEditar);
 
         caja3.add(btnEliminar);
@@ -161,36 +235,6 @@ public class PanelInventario extends JPanel {
         add(addExcel);
 
         add(cajaVertical2);
-
-    }
-
-    public void crearcajasProducto(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-//        En caso sea la caja de descripcion la hacemos mas grande
-        if (lbl1.equals("Descripcion")) {
-
-            txt = new JTextField(15);
-
-        } else {
-
-            txt = new JTextField(14);
-
-        }
-
-        if (lbl1.equals("Codigo")) {
-            txt.setText(controller.cadenaAleatoria());
-            txt.setEnabled(false);
-        }
-
-        caja1.add(lbl);
-
-        caja1.add(Box.createHorizontalStrut(5));
-
-        caja1.add(txt);
-
-        caja1.add(Box.createHorizontalStrut(10));
 
     }
 
@@ -212,6 +256,10 @@ public class PanelInventario extends JPanel {
 
     public void crearTabla() {
 
+        jt = new JTable();
+
+        model = new DefaultTableModel();
+
         model.addColumn("ID");
         model.addColumn("Nombre");
         model.addColumn("Codigo");
@@ -221,8 +269,6 @@ public class PanelInventario extends JPanel {
         model.addColumn("Descripcion");
 
         jt.setModel(model);
-
-        controller.actualizarFilas(jt, model);
 
         jt.setPreferredScrollableViewportSize(new Dimension(1175, 280));
         JScrollPane sp = new JScrollPane(jt);
@@ -248,41 +294,49 @@ public class PanelInventario extends JPanel {
 
     }
 
-    class accion implements ActionListener {
+    //    Para hallar un numero aleatorio
+    public String cadenaAleatoria() {
+        // El banco de caracteres
+        String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        // La cadena en donde iremos agregando un carácter aleatorio
+        String cadena = "";
+        for (int x = 0; x < 6; x++) {
+            int indiceAleatorio = numeroAleatorioEnRango(0, banco.length() - 1);
+            char caracterAleatorio = banco.charAt(indiceAleatorio);
+            cadena += caracterAleatorio;
+        }
+        return cadena;
+    }
+
+    public int numeroAleatorioEnRango(int minimo, int maximo) {
+        // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
+        return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
+    }
+
+//    Clase para los eventos de las teclas
+    class eventoTeclado implements KeyListener {
 
         @Override
-        public void actionPerformed(ActionEvent ae) {
+        public void keyTyped(KeyEvent ke) {
 
-            try {
+//            Capturamos la tecla que presionamos
+            int key = ke.getKeyChar();
 
-                Object press = ae.getSource();
-
-                String nombre = txtNomProducto.getText();
-
-                String codigo = txtCodProducto.getText();
-
-                String laboratorio = txtLabProducto.getText();
-
-                int stock = Integer.parseInt(txtStock.getText());
-
-                Double precio = Double.parseDouble(txtPrecio.getText());
-
-                String descripcion = txtDescripcion.getText();
-
-                if (press == btnRegistrar) {
-
-//                    Llamamos al controlador
-                    controller.registrar(nombre, codigo, laboratorio, stock, precio, descripcion);
-                    
-                    controller.actualizarFilas(jt, model);
-
-                }
-
-            } catch (RuntimeException e) {
-
-                JOptionPane.showMessageDialog(null, "Completa todas las casillas", "Agregar producto", JOptionPane.ERROR_MESSAGE);
-
+//            validamos
+            if (((key < '0') || (key > '9')) && (key != '.')) {
+//                Este metodo evita que se coloque la tecla presionada
+                ke.consume();
             }
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
 
         }
 

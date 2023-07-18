@@ -32,6 +32,16 @@ import javax.swing.border.LineBorder;
  */
 public class Login extends JFrame{
     
+    JPanel LaminaLogin;
+    
+//    Ponemos los componentes en publico para poder acceder a ellos en el controlador
+    
+    public JTextField txtuser;
+    
+    public JPasswordField txtpass;
+    
+    public JButton btningreso, btnsalir;
+    
     public Login() {
         
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,24 +59,15 @@ public class Login extends JFrame{
         Image icono = pantalla.getImage("src/main/java/resources/logo.png");
 
         setIconImage(icono);
-
-        add(new LaminaLogin());
-
-    }
-    
-}
-class LaminaLogin extends JPanel {
-    
-    JTextField txtuser;
-    
-    JPasswordField txtpass;
-
-    public LaminaLogin() {
-
+        
+//        Creacion del panel
+        
+        LaminaLogin = new JPanel();
+        
         //--PONEMOS LA DISPOSICION QUE DESEAMOS EN ESTE CASO
         //--BORDERLAYOUT
-        setLayout(new BorderLayout());
-
+        LaminaLogin.setLayout(new BorderLayout());
+        
         JPanel laminaima = new JPanel();
 
         //--CONVERTIMOS UN IMAGEICON A IMAGE PARA AJUSTAR SU TAMAÑO
@@ -84,7 +85,7 @@ class LaminaLogin extends JPanel {
 
         laminaima.add(ima);
 
-        add(laminaima, BorderLayout.NORTH);
+        LaminaLogin.add(laminaima, BorderLayout.NORTH);
 
         JPanel laminap = new JPanel();
 
@@ -131,40 +132,34 @@ class LaminaLogin extends JPanel {
 
         laminap.add(txtpass);
 
-        add(laminap, BorderLayout.CENTER);
+        LaminaLogin.add(laminap, BorderLayout.CENTER);
 
         //--ACA DECLARAMOS LOS JBUTTON
         JPanel laminabtn = new JPanel();
 
         laminabtn.setLayout(new FlowLayout());
 
-        JButton btningreso = new JButton("Ingresar");
+        btningreso = new JButton("Ingresar");
         
-        JButton btnregistro = new JButton("Salir");
+        btnsalir = new JButton("Salir");
 
         btningreso.setFont(new Font("Tahoma", Font.BOLD, 14));
         
-        btnregistro.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnsalir.setFont(new Font("Tahoma", Font.BOLD, 14));
 
         btningreso.setBackground(Color.CYAN);
         
-        btnregistro.setBackground(Color.RED);
+        btnsalir.setBackground(Color.RED);
         
-        btnregistro.setForeground(Color.WHITE);
-        
-//        Agregamos la funcionalidad al jbutton
-
-        btningreso.addActionListener(new accion());
-        
-        btnregistro.addActionListener(new salir());
+        btnsalir.setForeground(Color.WHITE);
         
 //        -------------------
 
         laminabtn.add(btningreso);
         
-        laminabtn.add(btnregistro);
+        laminabtn.add(btnsalir);
 
-        add(laminabtn, BorderLayout.SOUTH);
+        LaminaLogin.add(laminabtn, BorderLayout.SOUTH);
 
         //PINTAMOS LAS LAMINAS
         laminap.setBackground(new Color(48, 61, 66));
@@ -172,32 +167,9 @@ class LaminaLogin extends JPanel {
         laminaima.setBackground(new Color(48, 61, 66));
 
         laminabtn.setBackground(new Color(45, 45, 45));
-
-    }
-    
-    public class accion implements ActionListener{
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            
-            String usuario = txtuser.getText();
-            String password = txtpass.getText();
-            
-            LoginController controlador = new LoginController(usuario, password);
-
-        }
         
-    }
-    
-    public class salir implements ActionListener{
+        add(LaminaLogin);
 
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            
-            System.exit(0);
-
-        }
-        
     }
     
     //ESTE METODO ME PERMITE REDIMENSIONAR EL TAMAÑO DE UNA IMAGEN
@@ -215,7 +187,7 @@ class LaminaLogin extends JPanel {
         return ulti;
 
     }
-
+    
 }
 //ESTE ES LA CLASE DEL LAYOUT CREADO
 

@@ -10,13 +10,11 @@ com/mycompany/proyectofarmacia/models/Impl/VentasDAOImpl.class
 com/mycompany/proyectofarmacia/models/DTO/FarmaceuticoDTO.class
 com/mycompany/proyectofarmacia/App.class
 com/mycompany/proyectofarmacia/models/DTO/ProductoDTO.class
-com/mycompany/proyectofarmacia/views/PanelInventario$accion.class
 com/mycompany/proyectofarmacia/models/Impl/FarmaceuticoDAOImpl.class
 com/mycompany/proyectofarmacia/views/NewClass.class
 com/mycompany/proyectofarmacia/controllers/LoginController.class
 com/mycompany/proyectofarmacia/views/Menu.class
 com/mycompany/proyectofarmacia/views/PanelPrincipal.class
-com/mycompany/proyectofarmacia/views/LaminaLogin.class
 com/mycompany/proyectofarmacia/views/LaminaMenu.class
 com/mycompany/proyectofarmacia/models/Conexion.class
 com/mycompany/proyectofarmacia/views/PanelHistorial.class
@@ -24,7 +22,6 @@ com/mycompany/proyectofarmacia/views/TextPrompt$Show.class
 com/mycompany/proyectofarmacia/views/LaminaMenu$accion.class
 com/mycompany/proyectofarmacia/controllers/InventarioController.class
 com/mycompany/proyectofarmacia/models/DAO/ProductoDAO.class
-com/mycompany/proyectofarmacia/views/LaminaLogin$salir.class
-com/mycompany/proyectofarmacia/views/LaminaLogin$accion.class
 com/mycompany/proyectofarmacia/views/PanelVentas.class
 com/mycompany/proyectofarmacia/views/PanelInventario.class
+com/mycompany/proyectofarmacia/views/PanelInventario$eventoTeclado.class

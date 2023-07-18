@@ -8,12 +8,17 @@ import com.mycompany.proyectofarmacia.models.Conexion;
 import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
 import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
 import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
+import com.mycompany.proyectofarmacia.views.PanelInventario;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -22,10 +27,42 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author yimy
  */
-public class InventarioController {
+public class InventarioController implements ActionListener {
+
+    private PanelInventario vista;
+
+    private String nombre, codigo, laboratorio, stock, descripcion, precio;
+
+//    La creacion de este objeto recibira una instancia de la clase Login
+    public InventarioController(PanelInventario vista) {
+
+        this.vista = vista;
+
+//        Les damos acciones a los JButtons
+        this.vista.btnRegistrar.addActionListener(this);
+        this.vista.btnLimpiar.addActionListener(this);
+
+//        Cargamos los datos en la tabla
+        actualizarFilas();
+
+    }
+
+//    Este metodo se encarga de iniciar la vista que recibio el constructor 
+    public void iniciarVista() {
+
+        vista.setVisible(true);
+
+    }
+
+//    Este metodo se encarga de cerrar la vista que recibio el constructor   
+    public void cerrarVista() {
+
+        vista.setVisible(false);
+
+    }
 
 //    Registramos los datos capturados en el panel
-    public void registrar(String nombre, String codigo, String laboratorio, int stock, Double precio, String descripcion) {
+    public void registrar() {
 
         Connection conexion = null;
 
@@ -37,9 +74,13 @@ public class InventarioController {
             ProductoDAO productoDao = new ProductoDAOImpl(conexion);
 
             //aca se hace las consultas
-            ProductoDTO producto = new ProductoDTO(nombre, codigo, laboratorio, stock, precio, descripcion);
+            capturarDatos();
+
+            ProductoDTO producto = new ProductoDTO(this.nombre, this.codigo, this.laboratorio, Integer.parseInt(this.stock), Double.parseDouble(this.precio), this.descripcion);
 
             productoDao.insert(producto);
+
+            JOptionPane.showMessageDialog(null, "Producto registrado correctamente", "Tabla Productos", JOptionPane.INFORMATION_MESSAGE);
 
             //-----------------------------
             conexion.commit();
@@ -56,7 +97,7 @@ public class InventarioController {
 
     }
 
-    public void actualizarFilas(JTable jt, DefaultTableModel model) {
+    public void actualizarFilas() {
 
         Connection conexion = null;
 
@@ -68,6 +109,12 @@ public class InventarioController {
             ProductoDAO productoDao = new ProductoDAOImpl(conexion);
 
             //aca se hace las consultas
+//            Antes de cargar los datos, vamos a borrar los anteriores para que no se repita
+            for (int j = 0; j < this.vista.jt.getRowCount(); j++) {
+                this.vista.model.removeRow(j);
+                j -= 1;
+            }
+
             List<ProductoDTO> productos = productoDao.select();
 
             Object ob[] = new Object[7];
@@ -79,11 +126,11 @@ public class InventarioController {
                 ob[4] = productos.get(i).getStock();
                 ob[5] = productos.get(i).getPrecio();
                 ob[6] = productos.get(i).getDescripcion();
-                model.addRow(ob);
+                this.vista.model.addRow(ob);
             }
 
-            jt.setModel(model);
-            
+            this.vista.jt.setModel(this.vista.model);
+
             //-----------------------------
             conexion.commit();
             System.out.println("se hizo commit");
@@ -99,7 +146,87 @@ public class InventarioController {
 
     }
 
-//    Para hallar un numero aleatorio
+    public void capturarDatos() {
+
+        this.nombre = this.vista.txtNomProducto.getText();
+
+        this.codigo = this.vista.txtCodProducto.getText();
+
+        this.laboratorio = this.vista.txtLabProducto.getText();
+
+        this.stock = this.vista.txtStock.getText();
+
+        this.descripcion = this.vista.txtDescripcion.getText();
+
+        this.precio = this.vista.txtPrecio.getText();
+
+    }
+    
+    public void limpiarDatos(){
+        
+        this.vista.txtNomProducto.setText("");
+
+        this.vista.txtCodProducto.setText(cadenaAleatoria());
+
+        this.vista.txtLabProducto.setText("");
+
+        this.vista.txtStock.setText("");
+
+        this.vista.txtDescripcion.setText("");
+
+        this.vista.txtPrecio.setText("");
+        
+    }
+
+    public boolean validarText() {
+
+        capturarDatos();
+
+        if (this.nombre.equals("") || this.codigo.equals("") || this.laboratorio.equals("") || this.stock.equals("") || this.descripcion.equals("") || this.precio.equals("")) {
+
+            return false;
+
+        } else {
+
+            return true;
+
+        }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+
+//        Con eso capturamos el objeto que llama a este evento
+        Object press = ae.getSource();
+
+        if (press == this.vista.btnRegistrar) {
+
+            System.out.println(validarText());
+
+//            Si los campos no estan vacios
+            if (validarText()) {
+
+                registrar();
+
+                actualizarFilas();
+                
+                limpiarDatos();
+
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Rellenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        } else if (press == this.vista.btnLimpiar) {
+
+            limpiarDatos();
+            
+        }
+    }
+    
+        //    Para hallar un numero aleatorio
     public String cadenaAleatoria() {
         // El banco de caracteres
         String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -117,5 +244,6 @@ public class InventarioController {
         // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
         return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
     }
+
 
 }
