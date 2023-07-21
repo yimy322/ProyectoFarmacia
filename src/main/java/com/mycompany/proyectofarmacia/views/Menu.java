@@ -4,7 +4,7 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
-import com.mycompany.proyectofarmacia.controllers.InventarioController;
+import com.mycompany.proyectofarmacia.controllers.*;
 import static com.mycompany.proyectofarmacia.controllers.LoginController.NAME;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -227,6 +227,10 @@ class LaminaMenu extends JPanel implements Runnable {
     
     InventarioController inventarioC = new InventarioController(panelInventario);
     
+    FarmaceuticoController farmaceuticoC =  new FarmaceuticoController(panelFarma);
+    
+    VentaController ventaC = new VentaController(panelVentas);
+    
     class accion implements ActionListener {
         
         @Override
@@ -239,13 +243,13 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 principal.setVisible(true);
 
-                panelVentas.setVisible(false);
+                ventaC.cerrarVista();
 
                 inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 
-                panelFarma.setVisible(false);
+                farmaceuticoC.cerrarVista();
 
                 add(principal, BorderLayout.CENTER);
 
@@ -257,13 +261,19 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 principal.setVisible(false);
 
-                panelVentas.setVisible(true);
+//                ---
+
+                ventaC.iniciarVista();
+                
+                ventaC.actualizarFilas();
+
+//                ---
 
                 inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 
-                panelFarma.setVisible(false);
+                farmaceuticoC.cerrarVista();
 
                 add(panelVentas, BorderLayout.CENTER);
 
@@ -275,15 +285,19 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 principal.setVisible(false);
 
-                panelVentas.setVisible(false);
+                ventaC.cerrarVista();
+                
+//                ---
                 
                 inventarioC.iniciarVista();
                 
                 inventarioC.actualizarFilas();
                 
+//                ---
+                
                 panelHistorial.setVisible(false);
                 
-                panelFarma.setVisible(false);
+                farmaceuticoC.cerrarVista();
 
                 add(panelInventario, BorderLayout.CENTER);
 
@@ -295,13 +309,13 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 principal.setVisible(false);
 
-                panelVentas.setVisible(false);
+                ventaC.cerrarVista();
 
                 inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(true);
                 
-                panelFarma.setVisible(false);
+                farmaceuticoC.cerrarVista();
 
                 add(panelHistorial, BorderLayout.CENTER);
 
@@ -313,13 +327,19 @@ class LaminaMenu extends JPanel implements Runnable {
 
                 principal.setVisible(false);
 
-                panelVentas.setVisible(false);
+                ventaC.cerrarVista();
 
                 inventarioC.cerrarVista();
                 
                 panelHistorial.setVisible(false);
                 
-                panelFarma.setVisible(true);
+//                ---
+                
+                farmaceuticoC.iniciarVista();
+                
+                farmaceuticoC.actualizarFilas();
+                
+//                ---
 
                 add(panelFarma, BorderLayout.CENTER);
 

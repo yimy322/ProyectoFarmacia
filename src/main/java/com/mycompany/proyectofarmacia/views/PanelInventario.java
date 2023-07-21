@@ -4,27 +4,14 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
-import com.mycompany.proyectofarmacia.controllers.InventarioController;
-import com.mycompany.proyectofarmacia.models.Conexion;
-import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
-import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
-import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
@@ -47,7 +34,7 @@ public class PanelInventario extends JPanel {
     JLabel id, codEditar, nomEditar, labEditar, Edistock, Edidescripcion, Ediprecio;
 
     //    TextField de editar
-    JTextField txtId, txtCodEditar, txtNomEditar, txtLabEditar, txtEdiStock, txtEdiDescripcion, txtEdiPrecio;
+    public JTextField txtId, txtCodEditar, txtNomEditar, txtLabEditar, txtEdiStock, txtEdiDescripcion, txtEdiPrecio;
 
     //Creacion de la tabla
     public JTable jt;
@@ -188,18 +175,96 @@ public class PanelInventario extends JPanel {
         cajaEditar = Box.createHorizontalBox();
 
         cajaVertical2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Editar Producto"));
+        
+//        Creacion de cajas para el box de editar
 
-        crearcajasEditar("Id", id, txtId);
+        id = new JLabel("Id");
+        
+        nomEditar = new JLabel("Nombre");
+        
+        codEditar = new JLabel("Codigo");
+        
+        labEditar = new JLabel("Laboratorio");
+        
+        Edistock = new JLabel("Stock");
+        
+        Ediprecio = new JLabel("Precio");
+        
 
-        crearcajasEditar("Nombre", nomEditar, txtNomEditar);
+        txtId = new JTextField(11);
+        
+        txtNomEditar = new JTextField(11);
+        
+        txtCodEditar = new JTextField(11);
+        
+        txtLabEditar = new JTextField(11);
+        
+        txtEdiStock = new JTextField(11);
+        
+        txtEdiPrecio = new JTextField(11);
+        
+//        Invalidamos algunas cajas para que no puedan ser modificadas
 
-        crearcajasEditar("Codigo", codEditar, txtCodEditar);
+        txtId.setEnabled(false);
+        
+        txtCodEditar.setEnabled(false);
+        
+//        ------------------------------
+        
+        cajaEditar.add(id);
 
-        crearcajasEditar("Laboratorio", labEditar, txtLabEditar);
+        cajaEditar.add(Box.createHorizontalStrut(6));
 
-        crearcajasEditar("Stock", Edistock, txtEdiStock);
+        cajaEditar.add(txtId);
 
-        crearcajasEditar("Precio", Ediprecio, txtEdiPrecio);
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+        
+        cajaEditar.add(nomEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(6));
+
+        cajaEditar.add(txtNomEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+        
+        cajaEditar.add(codEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(6));
+
+        cajaEditar.add(txtCodEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+        
+        cajaEditar.add(labEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(6));
+
+        cajaEditar.add(txtLabEditar);
+
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+        
+        cajaEditar.add(Edistock);
+
+        cajaEditar.add(Box.createHorizontalStrut(6));
+
+        cajaEditar.add(txtEdiStock);
+
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+        
+        cajaEditar.add(Ediprecio);
+
+        cajaEditar.add(Box.createHorizontalStrut(6));
+
+        cajaEditar.add(txtEdiPrecio);
+
+        cajaEditar.add(Box.createHorizontalStrut(12));
+        
+//        ------------------------------------------------------
 
         cajaVertical2.add(cajaEditar);
 
@@ -238,22 +303,6 @@ public class PanelInventario extends JPanel {
 
     }
 
-    public void crearcajasProducto1(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(10);
-
-        caja2.add(lbl);
-
-        caja2.add(Box.createHorizontalStrut(5));
-
-        caja2.add(txt);
-
-        caja2.add(Box.createHorizontalStrut(10));
-
-    }
-
     public void crearTabla() {
 
         jt = new JTable();
@@ -275,22 +324,6 @@ public class PanelInventario extends JPanel {
 
         cajaTabla.add(sp);
         cajaTabla.add(Box.createVerticalStrut(10));
-
-    }
-
-    public void crearcajasEditar(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(11);
-
-        cajaEditar.add(lbl);
-
-        cajaEditar.add(Box.createHorizontalStrut(6));
-
-        cajaEditar.add(txt);
-
-        cajaEditar.add(Box.createHorizontalStrut(12));
 
     }
 

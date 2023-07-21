@@ -21,7 +21,7 @@ public class FarmaceuticoDAOImpl implements FarmaceuticoDAO {
     private Connection conexionTransaccional;
 
 //    Consultas
-    private static final String SQL_SELECT = "SELECT id_farmaceutico, nombre, apellido, fec_nac, edad, direccion, nacionalidad FROM farmaceuticos";
+    private static final String SQL_SELECT = "SELECT * FROM farmaceuticos";
     private static final String SQL_INSERT = "INSERT INTO farmaceuticos(nombre, apellido, fec_nac, edad, direccion, nacionalidad, contraseña) VALUES (?,?,?,?,?,?,?)";
     private static final String SQL_UPDATE = "UPDATE farmaceuticos SET nombre = ?,apellido = ?,fec_nac = ?,edad = ?,direccion = ?,nacionalidad = ?,contraseña = ? WHERE id_farmaceutico = ?";
     private static final String SQL_DELETE = "DELETE FROM farmaceuticos WHERE id_farmaceutico =?";
@@ -180,8 +180,9 @@ public class FarmaceuticoDAOImpl implements FarmaceuticoDAO {
                 int edad = rs.getInt("edad");
                 String direccion = rs.getString("direccion");
                 String nacionalidad = rs.getString("nacionalidad");
+                String contrasena = rs.getString("contraseña");
 
-                farmaceutico = new FarmaceuticoDTO(idFarmaceutico, nombre, apellido, fecNac, edad, direccion, nacionalidad);
+                farmaceutico = new FarmaceuticoDTO(idFarmaceutico, nombre, apellido, fecNac, edad, direccion, nacionalidad, contrasena);
 
                 farmaceuticos.add(farmaceutico);
 

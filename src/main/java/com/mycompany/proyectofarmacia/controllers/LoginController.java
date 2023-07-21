@@ -91,13 +91,15 @@ public class LoginController implements ActionListener{
 
                     cerrarVista();
                     
-                    JOptionPane.showMessageDialog(null, "Bienvenido "+NAME,"Sistema de farmacia", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Bienvenido "+this.vista.txtuser.getText(),"Sistema de farmacia", JOptionPane.INFORMATION_MESSAGE);
                     
                     NAME = farmaceuticos.get(i).getNombre();
                     
                     Menu marcopro = new Menu();
                     
                     marcopro.setVisible(true);
+                    
+                    break;
 
                 }else{
                     

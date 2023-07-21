@@ -4,21 +4,13 @@
  */
 package com.mycompany.proyectofarmacia.views;
 
-import com.mycompany.proyectofarmacia.models.Conexion;
-import com.mycompany.proyectofarmacia.models.DAO.FarmaceuticoDAO;
-import com.mycompany.proyectofarmacia.models.DTO.FarmaceuticoDTO;
-import com.mycompany.proyectofarmacia.models.Impl.FarmaceuticoDAOImpl;
+import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+
 
 /**
  *
@@ -28,21 +20,28 @@ public class PanelFarmaceuticos extends JPanel {
 
     Box caja1, caja2, caja3;
 
-    JLabel lblId, lblNombre, lblApellido, lblFecha, lblContra, lblDireccion, lblNacionalidad;
+    JLabel lblId, lblNombre, lblApellido, lblFecha, lblEdad, lblContra, lblDireccion, lblNacionalidad;
 
-    JTextField txtNombre, txtApellido, txtFecha, txtDireccion, txtNacionalidad;
+    public JTextField txtNombre, txtApellido, txtFecha, txtDireccion, txtNacionalidad;
 
-    JPasswordField txtpass;
+    public JPasswordField txtpass;
 
 //    TextField para editar
-    JTextField Eid, EtxtNombre, EtxtApellido, EtxtFecha, EtxtDireccion, EtxtNacionalidad;
+    public JTextField Eid, EtxtNombre, EtxtApellido, EfechaNac,EtxtEdad, EtxtDireccion, EtxtNacionalidad;
 
-    JPasswordField Etxtpass;
+    public JPasswordField Etxtpass;
 
-    JButton btnRegistrar;
+    public JButton btnRegistrar;
 
 //    Buttons para editar
-    JButton btnEditar, btnEliminar;
+    public JButton btnEditar, btnEliminar;
+
+//    El datechoooser
+    public JDateChooser Ejd, jd;
+
+    public JTable jt;
+
+    public DefaultTableModel model;
 
     public PanelFarmaceuticos() {
 
@@ -59,14 +58,86 @@ public class PanelFarmaceuticos extends JPanel {
         caja3 = Box.createHorizontalBox();
 
 //        Caja 1
+        //Creacion de labels y txts
         caja1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Registrar Farmaceutico"));
 
-        crearCajas("Nombre", lblNombre, txtNombre);
-        crearCajas("Apellidos", lblApellido, txtApellido);
-        crearCajas("Fecha de nacimiento", lblFecha, txtFecha);
-        crearCajas("Direccion", lblDireccion, txtDireccion);
-        crearCajas("Nacionalidad", lblNacionalidad, txtNacionalidad);
-        crearCajasContra("Contraseña", lblContra, txtpass);
+        lblNombre = new JLabel("Nombre");
+
+        txtNombre = new JTextField(5);
+
+        caja1.add(lblNombre);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtNombre);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
+
+        lblApellido = new JLabel("Apellidos");
+
+        txtApellido = new JTextField(5);
+
+        caja1.add(lblApellido);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtApellido);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
+
+        lblFecha = new JLabel("Fecha de nac.");
+
+        jd = new JDateChooser();
+
+        caja1.add(lblFecha);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(jd);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
+
+        lblDireccion = new JLabel("Direccion");
+
+        txtDireccion = new JTextField(5);
+
+        caja1.add(lblDireccion);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtDireccion);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
+
+        lblNacionalidad = new JLabel("Nacionalidad");
+
+        txtNacionalidad = new JTextField(5);
+
+        caja1.add(lblNacionalidad);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtNacionalidad);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
+
+        lblContra = new JLabel("Contraseña");
+
+        txtpass = new JPasswordField(5);
+
+        caja1.add(lblContra);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtpass);
+
+        caja1.add(Box.createHorizontalStrut(10));
+        
 
         btnRegistrar = new JButton("Registrar", new ImageIcon("src/main/java/resources/agregar.png"));
 
@@ -91,13 +162,115 @@ public class PanelFarmaceuticos extends JPanel {
 //        Caja 3
         caja3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Editar o eliminar Farmaceutico"));
 
-        crearCajas1("Id", lblId, Eid);
-        crearCajas1("Nombre", lblNombre, EtxtNombre);
-        crearCajas1("Apellidos", lblApellido, EtxtApellido);
-        crearCajas1("Fecha de nacimiento", lblFecha, EtxtFecha);
-        crearCajas1("Direccion", lblDireccion, EtxtDireccion);
-        crearCajas1("Nacionalidad", lblNacionalidad, EtxtNacionalidad);
-        crearCajasContra1("Contraseña", lblContra, Etxtpass);
+        lblId = new JLabel("Id");
+
+        Eid = new JTextField(3);
+        
+        Eid.setEnabled(false);
+
+        caja3.add(lblId);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(Eid);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblNombre = new JLabel("Nombre");
+
+        EtxtNombre = new JTextField(6);
+
+        caja3.add(lblNombre);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EtxtNombre);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblApellido = new JLabel("Apellidos");
+
+        EtxtApellido = new JTextField(6);
+
+        caja3.add(lblApellido);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EtxtApellido);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblFecha = new JLabel("Fec. nac.");
+
+        EfechaNac = new JTextField(7);
+        
+        EfechaNac.setEnabled(false);
+
+        caja3.add(lblFecha);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EfechaNac);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+        
+        lblEdad = new JLabel("Edad");
+
+        EtxtEdad = new JTextField(3);
+        
+        EtxtEdad.setEnabled(false);
+
+        caja3.add(lblEdad);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EtxtEdad);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblDireccion = new JLabel("Direccion");
+
+        EtxtDireccion = new JTextField(6);
+
+        caja3.add(lblDireccion);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EtxtDireccion);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblNacionalidad = new JLabel("Nacionalidad");
+
+        EtxtNacionalidad = new JTextField(6);
+
+        caja3.add(lblNacionalidad);
+
+        caja3.add(Box.createHorizontalStrut(3));
+
+        caja3.add(EtxtNacionalidad);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
+
+        lblContra = new JLabel("Contraseña");
+
+        Etxtpass = new JPasswordField(6);
+
+        caja3.add(lblContra);
+
+        caja3.add(Box.createHorizontalStrut(5));
+
+        caja3.add(Etxtpass);
+
+        caja3.add(Box.createHorizontalStrut(10));
+        
 
         btnEditar = new JButton(new ImageIcon("src/main/java/resources/salvar.png"));
 
@@ -113,133 +286,28 @@ public class PanelFarmaceuticos extends JPanel {
 
     }
 
-    public void crearCajas(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(5);
-
-        caja1.add(lbl);
-
-        caja1.add(Box.createHorizontalStrut(5));
-
-        caja1.add(txt);
-
-        caja1.add(Box.createHorizontalStrut(10));
-
-    }
-
-    public void crearCajasContra(String lbl1, JLabel lbl, JPasswordField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JPasswordField(5);
-
-        caja1.add(lbl);
-
-        caja1.add(Box.createHorizontalStrut(5));
-
-        caja1.add(txt);
-
-        caja1.add(Box.createHorizontalStrut(10));
-
-    }
-
-    public void crearCajas1(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(6);
-
-        caja3.add(lbl);
-
-        caja3.add(Box.createHorizontalStrut(3));
-
-        caja3.add(txt);
-
-        caja3.add(Box.createHorizontalStrut(10));
-
-    }
-
-    public void crearCajasContra1(String lbl1, JLabel lbl, JPasswordField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JPasswordField(4);
-
-        caja3.add(lbl);
-
-        caja3.add(Box.createHorizontalStrut(5));
-
-        caja3.add(txt);
-
-        caja3.add(Box.createHorizontalStrut(10));
-
-    }
-
     public void crearTabla() {
-
-//        Cargamos los datos de la tabla con un select
-        Connection conexion = null;
-
-        try {
-            conexion = Conexion.getConnection();
-            if (conexion.getAutoCommit()) {
-                conexion.setAutoCommit(false);
-            }
-            FarmaceuticoDAO farmaceuticoDao = new FarmaceuticoDAOImpl(conexion);
-
-            //aca se hace las consultas
-            List<FarmaceuticoDTO> farmaceuticos = farmaceuticoDao.select();
-
-            Object ob[] = new Object[7];
-
 //            Creacion de la tabla
-            JTable jt = new JTable();
+        jt = new JTable();
 
-            DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
 
-            model.addColumn("ID");
-            model.addColumn("Nombre");
-            model.addColumn("Apellido");
-            model.addColumn("Fecha nac.");
-            model.addColumn("Edad");
-            model.addColumn("Direccion");
-            model.addColumn("Nacionalidad");
+        model.addColumn("ID");
+        model.addColumn("Nombre");
+        model.addColumn("Apellido");
+        model.addColumn("Fecha nac.");
+        model.addColumn("Edad");
+        model.addColumn("Direccion");
+        model.addColumn("Nacionalidad");
+        model.addColumn("Contraseña");
 
-            jt.setModel(model);
+        jt.setModel(model);
 
-            for (int i = 0; i < farmaceuticos.size(); i++) {
-                ob[0] = farmaceuticos.get(i).getIdFarmaceutico();
-                ob[1] = farmaceuticos.get(i).getNombre();
-                ob[2] = farmaceuticos.get(i).getApellido();
-                ob[3] = farmaceuticos.get(i).getFecNac();
-                ob[4] = farmaceuticos.get(i).getEdad();
-                ob[5] = farmaceuticos.get(i).getDireccion();
-                ob[6] = farmaceuticos.get(i).getNacionalidad();
-                model.addRow(ob);
-            }
+        jt.setPreferredScrollableViewportSize(new Dimension(1175, 335));
+        JScrollPane sp = new JScrollPane(jt);
 
-            jt.setModel(model);
-
-            jt.setPreferredScrollableViewportSize(new Dimension(1175, 280));
-            JScrollPane sp = new JScrollPane(jt);
-
-            caja2.add(sp);
-            caja2.add(Box.createVerticalStrut(10));
-
-            //-----------------------------
-            conexion.commit();
-            System.out.println("se hizo commit");
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-            System.out.println("Entramos al rollback");
-            try {
-                conexion.rollback();
-            } catch (SQLException ex1) {
-                ex.printStackTrace(System.out);
-            }
-        }
+        caja2.add(sp);
+        caja2.add(Box.createVerticalStrut(10));
 
     }
 

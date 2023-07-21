@@ -11,6 +11,7 @@ import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,20 +26,26 @@ public class PanelVentas extends JPanel {
     JLabel usuario, fecha, pago, moneda, cliente, comprobante, ncomprobante;
 
 //    Labels del producto
-    JLabel codProducto, nomProducto, labProducto, stock, descripcion, cantidad;
+    JLabel codProducto, nomProducto, labProducto, stock, descripcion, cantidad, busProducto, precio;
 
 //    ------
-    JTextField txtusuario, txtfecha, txtpago, txtmoneda, txtcliente, txtcomprobante, ntxtcomprobante;
+    public JTextField txtusuario, txtfecha, txtcliente, txtcomprobante, ntxtcomprobante;
+    
+    public JComboBox txtmoneda, txtpago;
 
 //    TextField del producto
-    JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtCantidad;
+    public JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtCantidad, txtPrecio;
 
 //    ------    
 //    Buttons del producto
-    JButton busProducto, agregar, eliminar;
+    public JButton agregar, eliminar;
 
 //    ------  
-    JButton realizarVenta, borrarVenta;
+    public JButton realizarVenta, borrarVenta;
+    
+    public JTable jt;
+
+    public DefaultTableModel model;
 
     Box cajavertical = Box.createVerticalBox();
 
@@ -65,22 +72,101 @@ public class PanelVentas extends JPanel {
 
         //-----CREACION DE LBL Y TXT----------
         cajavertical.add(Box.createVerticalStrut(2));
+        
+        
+        usuario = new JLabel("Usuario");
 
-        crearcajas("Usuario", usuario, txtusuario);
+        txtusuario = new JTextField(11);
+        
+        txtusuario.setEditable(false);
 
-        crearcajas("Fecha", fecha, txtfecha);
+        caja1.add(usuario);
 
-        crearcajas("Forma de pago", pago, txtpago);
+        caja1.add(Box.createHorizontalStrut(5));
 
-        crearcajas("Moneda", moneda, txtmoneda);
+        caja1.add(txtusuario);
 
-        crearcajas("Cliente", cliente, txtcliente);
+        caja1.add(Box.createHorizontalStrut(15));
+        
+
+        fecha = new JLabel("Fecha");
+
+        txtfecha = new JTextField(11);
+        
+        txtfecha.setEditable(false);
+
+        caja1.add(fecha);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtfecha);
+
+        caja1.add(Box.createHorizontalStrut(15));
+        
+
+        pago = new JLabel("Forma de pago");
+
+        txtpago = new JComboBox();
+
+        caja1.add(pago);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtpago);
+
+        caja1.add(Box.createHorizontalStrut(15));
+        
+
+        moneda = new JLabel("Moneda");
+
+        txtmoneda = new JComboBox();
+        
+        txtmoneda.addItem("Soles");
+        txtmoneda.addItem("Dolares");
+
+        caja1.add(moneda);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtmoneda);
+
+        caja1.add(Box.createHorizontalStrut(15));
+        
+
+        cliente = new JLabel("Cliente");
+
+        txtcliente = new JTextField(11);
+
+        caja1.add(cliente);
+
+        caja1.add(Box.createHorizontalStrut(5));
+
+        caja1.add(txtcliente);
+
+        caja1.add(Box.createHorizontalStrut(15));
+        
 
         cajavertical.add(caja1);
 
         caja1.add(Box.createVerticalStrut(5));
+        
+        
+        ncomprobante = new JLabel("Nº de comprobante");
 
-        crearcajas1("Nº de comprobante", ncomprobante, ntxtcomprobante);
+        ntxtcomprobante = new JTextField(11);
+        
+        ntxtcomprobante.setText(cadenaAleatoria());
+        
+        ntxtcomprobante.setEditable(false);
+
+        caja2.add(ncomprobante);
+
+        caja2.add(Box.createHorizontalStrut(5));
+
+        caja2.add(ntxtcomprobante);
+
+        caja2.add(Box.createHorizontalStrut(15));
+        
 
         cajavertical.add(caja2);
 
@@ -88,22 +174,87 @@ public class PanelVentas extends JPanel {
 
 //        Caja productos
         cajaProductos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Producto"));
+        
+        
+        nomProducto = new JLabel("Nombre");
 
-        crearcajasProducto("Nombre", nomProducto, txtNomProducto);
+        txtNomProducto = new JTextField(9);
 
-        busProducto = new JButton(new ImageIcon("src/main/java/resources/buscar.png"));
+        cajaProductos.add(nomProducto);
+
+        cajaProductos.add(Box.createHorizontalStrut(5));
+
+        cajaProductos.add(txtNomProducto);
+
+        cajaProductos.add(Box.createHorizontalStrut(10));
+       
+
+        busProducto = new JLabel(new ImageIcon("src/main/java/resources/buscar.png"));
 
         cajaProductos.add(busProducto);
 
         cajaProductos.add(Box.createHorizontalStrut(15));
+        
+        
+        codProducto = new JLabel("Codigo");
 
-        crearcajasProducto("Codigo", codProducto, txtCodProducto);
+        txtCodProducto = new JTextField(9);
+        
+        txtCodProducto.setEditable(false);
 
-        crearcajasProducto("Laboratorio", labProducto, txtLabProducto);
+        cajaProductos.add(codProducto);
 
-        crearcajasProducto("Stock", stock, txtStock);
+        cajaProductos.add(Box.createHorizontalStrut(5));
 
-        crearcajasProducto("Descripcion", descripcion, txtDescripcion);
+        cajaProductos.add(txtCodProducto);
+
+        cajaProductos.add(Box.createHorizontalStrut(10));
+        
+
+        labProducto = new JLabel("Laboratorio");
+
+        txtLabProducto = new JTextField(9);
+        
+        txtLabProducto.setEditable(false);
+
+        cajaProductos.add(labProducto);
+
+        cajaProductos.add(Box.createHorizontalStrut(5));
+
+        cajaProductos.add(txtLabProducto);
+
+        cajaProductos.add(Box.createHorizontalStrut(10));
+        
+    
+        stock = new JLabel("Stock");
+
+        txtStock = new JTextField(9);
+        
+        txtStock.setEditable(false);
+
+        cajaProductos.add(stock);
+
+        cajaProductos.add(Box.createHorizontalStrut(5));
+
+        cajaProductos.add(txtStock);
+
+        cajaProductos.add(Box.createHorizontalStrut(10));
+        
+
+        descripcion = new JLabel("Descripcion");
+
+        txtDescripcion = new JTextField(16);
+        
+        txtDescripcion.setEditable(false);
+
+        cajaProductos.add(descripcion);
+
+        cajaProductos.add(Box.createHorizontalStrut(5));
+
+        cajaProductos.add(txtDescripcion);
+
+        cajaProductos.add(Box.createHorizontalStrut(10));
+        
 
         cajavertical.add(cajaProductos);
 
@@ -117,7 +268,23 @@ public class PanelVentas extends JPanel {
 
         cajavertical.add(Box.createVerticalStrut(10));
 
-//        Cantidad y botones
+//        Cantidad, precio y botones
+        
+        precio = new JLabel("Precio");
+
+        txtPrecio = new JTextField(10);
+        
+        txtPrecio.setEditable(false);
+
+        caja3.add(precio);
+
+        caja3.add(Box.createHorizontalStrut(5));
+
+        caja3.add(txtPrecio);
+
+        caja3.add(Box.createHorizontalStrut(15));
+        
+        
         cantidad = new JLabel("Cantidad");
 
         txtCantidad = new JTextField(10);
@@ -129,7 +296,8 @@ public class PanelVentas extends JPanel {
         caja3.add(txtCantidad);
 
         caja3.add(Box.createHorizontalStrut(15));
-
+        
+        
         agregar = new JButton("Agregar", new ImageIcon("src/main/java/resources/agregar.png"));
 
         caja3.add(agregar);
@@ -205,126 +373,27 @@ public class PanelVentas extends JPanel {
         //---------------------------------------
     }
 
-    public void crearcajas(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(11);
-
-        caja1.add(lbl);
-
-        caja1.add(Box.createHorizontalStrut(5));
-
-        caja1.add(txt);
-
-        caja1.add(Box.createHorizontalStrut(15));
-
-    }
-
-    public void crearcajas1(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-        txt = new JTextField(11);
-
-        caja2.add(lbl);
-
-        caja2.add(Box.createHorizontalStrut(5));
-
-        caja2.add(txt);
-
-        caja2.add(Box.createHorizontalStrut(15));
-
-    }
-
-    public void crearcajasProducto(String lbl1, JLabel lbl, JTextField txt) {
-
-        lbl = new JLabel(lbl1);
-
-//        En caso sea la caja de descripcion la hacemos mas grande
-        if (lbl1.equals("Descripcion")) {
-
-            txt = new JTextField(16);
-
-        } else {
-
-            txt = new JTextField(9);
-
-        }
-
-        cajaProductos.add(lbl);
-
-        cajaProductos.add(Box.createHorizontalStrut(5));
-
-        cajaProductos.add(txt);
-
-        cajaProductos.add(Box.createHorizontalStrut(10));
-
-    }
-
     public void crearTabla() {
 
-        //        Cargamos los datos de la tabla con un select
-        Connection conexion = null;
+        jt = new JTable();
 
-        try {
-            conexion = Conexion.getConnection();
-            if (conexion.getAutoCommit()) {
-                conexion.setAutoCommit(false);
-            }
-            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+        model = new DefaultTableModel();
 
-            //aca se hace las consultas
-            java.util.List<ProductoDTO> productos = productoDao.select();
+        model.addColumn("ID");
+        model.addColumn("Nombre");
+        model.addColumn("Codigo");
+        model.addColumn("Laboratorio");
+        model.addColumn("Stock");
+        model.addColumn("Precio(S/.)");
+        model.addColumn("Descripcion");
 
-            Object ob[] = new Object[7];
+        jt.setModel(model);
 
-//            Creacion de la tabla
-            JTable jt = new JTable();
+        jt.setPreferredScrollableViewportSize(new Dimension(1050, 110));
+        JScrollPane sp = new JScrollPane(jt);
 
-            DefaultTableModel model = new DefaultTableModel();
-
-            model.addColumn("ID");
-            model.addColumn("Nombre");
-            model.addColumn("Codigo");
-            model.addColumn("Laboratorio");
-            model.addColumn("Stock");
-            model.addColumn("Precio");
-            model.addColumn("Descripcion");
-
-            jt.setModel(model);
-
-            for (int i = 0; i < productos.size(); i++) {
-                ob[0] = productos.get(i).getIdProducto();
-                ob[1] = productos.get(i).getNombre();
-                ob[2] = productos.get(i).getCodigo();
-                ob[3] = productos.get(i).getLaboratorio();
-                ob[4] = productos.get(i).getStock();
-                ob[5] = productos.get(i).getPrecio();
-                ob[6] = productos.get(i).getDescripcion();
-                model.addRow(ob);
-            }
-
-            jt.setModel(model);
-
-            jt.setPreferredScrollableViewportSize(new Dimension(1050, 110));
-            JScrollPane sp = new JScrollPane(jt);
-
-            cajaTabla.add(sp);
-            cajaTabla.add(Box.createVerticalStrut(10));
-
-            //-----------------------------
-            conexion.commit();
-            System.out.println("se hizo commit");
-        } catch (SQLException ex) {
-            ex.printStackTrace(System.out);
-            System.out.println("Entramos al rollback");
-            try {
-                conexion.rollback();
-            } catch (SQLException ex1) {
-                ex.printStackTrace(System.out);
-            }
-        }
+        cajaTabla.add(sp);
+        cajaTabla.add(Box.createVerticalStrut(10));
 
     }
 
@@ -341,6 +410,25 @@ public class PanelVentas extends JPanel {
 
         return resultado;
 
+    }
+    
+        //    Para hallar un numero aleatorio
+    public String cadenaAleatoria() {
+        // El banco de caracteres
+        String banco = "1234567890";
+        // La cadena en donde iremos agregando un carácter aleatorio
+        String cadena = "";
+        for (int x = 0; x < 6; x++) {
+            int indiceAleatorio = numeroAleatorioEnRango(0, banco.length() - 1);
+            char caracterAleatorio = banco.charAt(indiceAleatorio);
+            cadena += caracterAleatorio;
+        }
+        return cadena;
+    }
+
+    public int numeroAleatorioEnRango(int minimo, int maximo) {
+        // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
+        return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
     }
 
 }

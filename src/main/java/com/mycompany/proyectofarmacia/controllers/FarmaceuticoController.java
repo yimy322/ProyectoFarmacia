@@ -5,49 +5,53 @@
 package com.mycompany.proyectofarmacia.controllers;
 
 import com.mycompany.proyectofarmacia.models.Conexion;
-import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
-import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
-import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
-import com.mycompany.proyectofarmacia.views.PanelInventario;
+import com.mycompany.proyectofarmacia.models.DAO.FarmaceuticoDAO;
+import com.mycompany.proyectofarmacia.models.DTO.FarmaceuticoDTO;
+import com.mycompany.proyectofarmacia.models.Impl.FarmaceuticoDAOImpl;
+import com.mycompany.proyectofarmacia.views.PanelFarmaceuticos;
+import com.toedter.calendar.JDateChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author yimy
  */
-public class InventarioController implements ActionListener, MouseListener {
+public class FarmaceuticoController implements ActionListener, MouseListener {
 
-    private PanelInventario vista;
+    private PanelFarmaceuticos vista;
 
-    private String nombre, codigo, laboratorio, stock, descripcion, precio;
+    private String nombre, apellido, contra, direccion, nacionalidad;
     
-    private String id, nombreE, codigoE, laboratorioE, stockE, descripcionE, precioE;
+    private String idE, nombreE, apellidoE, fechaE, edadE, direccionE, nacionalidadE, contrasenaE;
+    
+    private Date fecha;
+    
+    private int id;
+    
+    private String capContra;
 
-//    La creacion de este objeto recibira una instancia de la clase Login
-    public InventarioController(PanelInventario vista) {
+    public FarmaceuticoController(PanelFarmaceuticos vista) {
 
         this.vista = vista;
 
-//        Les damos acciones a los JButtons
+//        Añadimos accion el jbutton
         this.vista.btnRegistrar.addActionListener(this);
-        this.vista.btnLimpiar.addActionListener(this);
         this.vista.btnEditar.addActionListener(this);
         this.vista.btnEliminar.addActionListener(this);
-
-//        Cargamos los datos en la tabla
-        actualizarFilas();
         
 //        Le damos accion a la tabla
         this.vista.jt.addMouseListener(this);
 
+        
     }
 
 //    Este metodo se encarga de iniciar la vista que recibio el constructor 
@@ -63,7 +67,7 @@ public class InventarioController implements ActionListener, MouseListener {
         vista.setVisible(false);
 
     }
-
+    
 //    Registramos los datos capturados en el panel
     public void registrar() {
 
@@ -74,16 +78,16 @@ public class InventarioController implements ActionListener, MouseListener {
             if (conexion.getAutoCommit()) {
                 conexion.setAutoCommit(false);
             }
-            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+            FarmaceuticoDAO farmaceuticoDao = new FarmaceuticoDAOImpl(conexion);
 
             //aca se hace las consultas
             capturarDatos();
 
-            ProductoDTO producto = new ProductoDTO(this.nombre, this.codigo, this.laboratorio, Integer.parseInt(this.stock), Double.parseDouble(this.precio), this.descripcion);
+            FarmaceuticoDTO farmaceutico = new FarmaceuticoDTO(this.nombre, this.apellido, getFecha(this.vista.jd), getEdad(), this.direccion, this.nacionalidad, this.contra);
 
-            productoDao.insert(producto);
+            farmaceuticoDao.insert(farmaceutico);
 
-            JOptionPane.showMessageDialog(null, "Producto registrado correctamente", "Tabla Productos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Farmaceutico registrado correctamente", "Tabla Farmaceuticos", JOptionPane.INFORMATION_MESSAGE);
 
             //-----------------------------
             conexion.commit();
@@ -99,8 +103,8 @@ public class InventarioController implements ActionListener, MouseListener {
         }
 
     }
-    
-//    Para actualizar los datos
+
+    //    Para actualizar los datos
     public void actualizar(){
         
         Connection conexion = null;
@@ -110,16 +114,16 @@ public class InventarioController implements ActionListener, MouseListener {
             if (conexion.getAutoCommit()) {
                 conexion.setAutoCommit(false);
             }
-            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+            FarmaceuticoDAO farmaceuticoDao = new FarmaceuticoDAOImpl(conexion);
 
             //aca se hace las consultas
             capturarDatosE();
 
-            ProductoDTO producto = new ProductoDTO(this.nombreE, this.codigoE, this.laboratorioE, Integer.parseInt(this.stockE), Double.parseDouble(this.precioE), this.descripcionE, Integer.parseInt(this.id));
+            FarmaceuticoDTO farmaceutico = new FarmaceuticoDTO(this.nombreE, this.apellidoE, this.fechaE, Integer.parseInt(this.edadE), this.direccionE, this.nacionalidadE, this.contrasenaE ,  Integer.parseInt(this.idE));
 
-            productoDao.update(producto);
+            farmaceuticoDao.update(farmaceutico);
 
-            JOptionPane.showMessageDialog(null, "Producto actualizado correctamente", "Tabla Productos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Farmaceutico actualizado correctamente", "Tabla Farmaceuticos", JOptionPane.INFORMATION_MESSAGE);
 
             //-----------------------------
             conexion.commit();
@@ -146,16 +150,16 @@ public class InventarioController implements ActionListener, MouseListener {
             if (conexion.getAutoCommit()) {
                 conexion.setAutoCommit(false);
             }
-            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+            FarmaceuticoDAO farmaceuticoDao = new FarmaceuticoDAOImpl(conexion);
 
             //aca se hace las consultas
             capturarDatosE();
+//
+            FarmaceuticoDTO farmaceutico = new FarmaceuticoDTO(Integer.parseInt(this.idE));
 
-            ProductoDTO producto = new ProductoDTO(Integer.parseInt(this.id));
+            farmaceuticoDao.delete(farmaceutico);
 
-            productoDao.delete(producto);
-
-            JOptionPane.showMessageDialog(null, "Producto Eliminado correctamente", "Tabla Productos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Farmaceutico Eliminado correctamente", "Tabla Farmaceutico", JOptionPane.INFORMATION_MESSAGE);
 
             //-----------------------------
             conexion.commit();
@@ -181,7 +185,7 @@ public class InventarioController implements ActionListener, MouseListener {
             if (conexion.getAutoCommit()) {
                 conexion.setAutoCommit(false);
             }
-            ProductoDAO productoDao = new ProductoDAOImpl(conexion);
+            FarmaceuticoDAO farmaceuticoDao = new FarmaceuticoDAOImpl(conexion);
 
             //aca se hace las consultas
 //            Antes de cargar los datos, vamos a borrar los anteriores para que no se repita
@@ -190,17 +194,18 @@ public class InventarioController implements ActionListener, MouseListener {
                 j -= 1;
             }
 
-            List<ProductoDTO> productos = productoDao.select();
+            List<FarmaceuticoDTO> farmaceuticos = farmaceuticoDao.select();
 
-            Object ob[] = new Object[7];
-            for (int i = 0; i < productos.size(); i++) {
-                ob[0] = productos.get(i).getIdProducto();
-                ob[1] = productos.get(i).getNombre();
-                ob[2] = productos.get(i).getCodigo();
-                ob[3] = productos.get(i).getLaboratorio();
-                ob[4] = productos.get(i).getStock();
-                ob[5] = productos.get(i).getPrecio();
-                ob[6] = productos.get(i).getDescripcion();
+            Object ob[] = new Object[8];
+            for (int i = 0; i < farmaceuticos.size(); i++) {
+                ob[0] = farmaceuticos.get(i).getIdFarmaceutico();
+                ob[1] = farmaceuticos.get(i).getNombre();
+                ob[2] = farmaceuticos.get(i).getApellido();
+                ob[3] = farmaceuticos.get(i).getFecNac();
+                ob[4] = farmaceuticos.get(i).getEdad();
+                ob[5] = farmaceuticos.get(i).getDireccion();
+                ob[6] = farmaceuticos.get(i).getNacionalidad();
+                ob[7] = farmaceuticos.get(i).getContrasena();
                 this.vista.model.addRow(ob);
             }
 
@@ -220,44 +225,64 @@ public class InventarioController implements ActionListener, MouseListener {
         }
 
     }
+    
+//    Captura de datos y validacion
+    public String getFecha(JDateChooser jd) {    
+        SimpleDateFormat Formato = new SimpleDateFormat("yyyy-MM-dd");
+        if (jd.getDate() != null) {
+            return Formato.format(this.vista.jd.getDate());
+        } else {
+            return null;
+        }
+    }
+//    Capturamos solo el año del jdatechooser
+    public int getEdad(){
+        
+        Calendar fecha = new GregorianCalendar(); 
+        
+        int anoN = this.vista.jd.getCalendar().get(Calendar.YEAR);
+        
+        int anoA = fecha.get(Calendar. YEAR);
+        
+        int edad = anoA - anoN;
+        
+        return edad;
+        
+    }
 
     public void capturarDatos() {
 
-        this.nombre = this.vista.txtNomProducto.getText();
+        this.nombre = this.vista.txtNombre.getText();
 
-        this.codigo = this.vista.txtCodProducto.getText();
+        this.apellido = this.vista.txtApellido.getText();
 
-        this.laboratorio = this.vista.txtLabProducto.getText();
+        this.contra = this.vista.txtpass.getText();
 
-        this.stock = this.vista.txtStock.getText();
+        this.direccion = this.vista.txtDireccion.getText();
 
-        this.descripcion = this.vista.txtDescripcion.getText();
-
-        this.precio = this.vista.txtPrecio.getText();
+        this.nacionalidad = this.vista.txtNacionalidad.getText();
 
     }
-    
-    public void limpiarDatos(){
-        
-        this.vista.txtNomProducto.setText("");
 
-        this.vista.txtCodProducto.setText(cadenaAleatoria());
+    public void limpiarDatos() {
 
-        this.vista.txtLabProducto.setText("");
+        this.vista.txtNombre.setText("");
 
-        this.vista.txtStock.setText("");
+        this.vista.txtApellido.setText("");
 
-        this.vista.txtDescripcion.setText("");
+        this.vista.txtpass.setText("");
 
-        this.vista.txtPrecio.setText("");
-        
+        this.vista.txtDireccion.setText("");
+
+        this.vista.txtNacionalidad.setText("");
+
     }
 
     public boolean validarText() {
 
         capturarDatos();
 
-        if (this.nombre.equals("") || this.codigo.equals("") || this.laboratorio.equals("") || this.stock.equals("") || this.descripcion.equals("") || this.precio.equals("")) {
+        if (this.nombre.equals("") || this.apellido.equals("") || this.contra.equals("") || this.direccion.equals("") || this.nacionalidad.equals("") || getFecha(this.vista.jd) == null) {
 
             return false;
 
@@ -270,40 +295,44 @@ public class InventarioController implements ActionListener, MouseListener {
     }
     
 //    Lo mismo que arriba pero con las cajas de editar
-    
+
     public void capturarDatosE() {
 
-        this.id = this.vista.txtId.getText();
+        this.idE = this.vista.Eid.getText();
 
-        this.nombreE = this.vista.txtNomEditar.getText();
+        this.nombreE = this.vista.EtxtNombre.getText();
 
-        this.codigoE = this.vista.txtCodEditar.getText();
+        this.apellidoE = this.vista.EtxtApellido.getText();
 
-        this.laboratorioE = this.vista.txtLabEditar.getText();
+        this.fechaE = this.vista.EfechaNac.getText();
 
-        this.stockE = this.vista.txtEdiStock.getText();
+        this.edadE = this.vista.EtxtEdad.getText();
 
-        this.descripcionE = this.vista.txtEdiDescripcion.getText();
+        this.direccionE = this.vista.EtxtDireccion.getText();
 
-        this.precioE = this.vista.txtEdiPrecio.getText();
+        this.nacionalidadE = this.vista.EtxtNacionalidad.getText();
+        
+        this.contrasenaE = this.vista.Etxtpass.getText();
 
     }
     
     public void limpiarDatosE(){
         
-        this.vista.txtId.setText("");
+        this.vista.Eid.setText("");
         
-        this.vista.txtNomEditar.setText("");
+        this.vista.EtxtNombre.setText("");
 
-        this.vista.txtCodEditar.setText(cadenaAleatoria());
+        this.vista.EtxtApellido.setText("");
 
-        this.vista.txtLabEditar.setText("");
+        this.vista.EfechaNac.setText("");
 
-        this.vista.txtEdiStock.setText("");
+        this.vista.EtxtEdad.setText("");
 
-        this.vista.txtEdiDescripcion.setText("");
+        this.vista.EtxtDireccion.setText("");
 
-        this.vista.txtEdiPrecio.setText("");
+        this.vista.EtxtNacionalidad.setText("");
+        
+        this.vista.Etxtpass.setText("");
         
     }
 
@@ -311,7 +340,7 @@ public class InventarioController implements ActionListener, MouseListener {
 
         capturarDatosE();
 
-        if (this.nombreE.equals("") || this.laboratorioE.equals("") || this.stockE.equals("") || this.descripcionE.equals("") || this.precioE.equals("")) {
+        if (this.nombreE.equals("") || this.apellidoE.equals("") || this.direccionE.equals("") || this.nacionalidadE.equals("") || this.contrasenaE.equals("")) {
 
             return false;
 
@@ -325,30 +354,25 @@ public class InventarioController implements ActionListener, MouseListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-
+        
 //        Con eso capturamos el objeto que llama a este evento
         Object press = ae.getSource();
-
+                
         if (press == this.vista.btnRegistrar) {
-
-//            Si los campos no estan vacios
+            
             if (validarText()) {
-
+                
                 registrar();
 
                 actualizarFilas();
                 
                 limpiarDatos();
-
-            } else {
+                
+            }else{
 
                 JOptionPane.showMessageDialog(null, "Rellenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
-
-        }else if (press == this.vista.btnLimpiar) {
-
-            limpiarDatos();
             
         }else if(press == this.vista.btnEditar){
             
@@ -364,7 +388,7 @@ public class InventarioController implements ActionListener, MouseListener {
 
                 JOptionPane.showMessageDialog(null, "Rellenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
 
-            }
+            }      
             
         }else if(press == this.vista.btnEliminar){
             
@@ -375,70 +399,50 @@ public class InventarioController implements ActionListener, MouseListener {
             limpiarDatosE();
             
         }
+        
+        
     }
     
-        //    Para hallar un numero aleatorio
-    public String cadenaAleatoria() {
-        // El banco de caracteres
-        String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        // La cadena en donde iremos agregando un carácter aleatorio
-        String cadena = "";
-        for (int x = 0; x < 6; x++) {
-            int indiceAleatorio = numeroAleatorioEnRango(0, banco.length() - 1);
-            char caracterAleatorio = banco.charAt(indiceAleatorio);
-            cadena += caracterAleatorio;
-        }
-        return cadena;
-    }
-
-    public int numeroAleatorioEnRango(int minimo, int maximo) {
-        // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
-        return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
-    }
-
-//    Cuando implementamos la interfaz tenemos que cargar sus metodos
     @Override
     public void mouseClicked(MouseEvent me) {
         
 //        Aca capturamos la fila seleccionada
         int filaSeleccionada = this.vista.jt.getSelectedRow();
         
+        
 //        Aca pasamos los valores a las cajas
-        this.vista.txtId.setText(this.vista.model.getValueAt(filaSeleccionada, 0).toString());
+        this.vista.Eid.setText(this.vista.model.getValueAt(filaSeleccionada, 0).toString());
         
-        this.vista.txtNomEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 1).toString());
+        this.vista.EtxtNombre.setText(this.vista.model.getValueAt(filaSeleccionada, 1).toString());
         
-        this.vista.txtCodEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 2).toString());
+        this.vista.EtxtApellido.setText(this.vista.model.getValueAt(filaSeleccionada, 2).toString());
         
-        this.vista.txtLabEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 3).toString());
+        this.vista.EfechaNac.setText(this.vista.model.getValueAt(filaSeleccionada, 3).toString());
         
-        this.vista.txtEdiStock.setText(this.vista.model.getValueAt(filaSeleccionada, 4).toString());
+        this.vista.EtxtEdad.setText(this.vista.model.getValueAt(filaSeleccionada, 4).toString());
         
-        this.vista.txtEdiPrecio.setText(this.vista.model.getValueAt(filaSeleccionada, 5).toString());
+        this.vista.EtxtDireccion.setText(this.vista.model.getValueAt(filaSeleccionada, 5).toString());
         
-        this.vista.txtEdiDescripcion.setText(this.vista.model.getValueAt(filaSeleccionada, 6).toString());
+        this.vista.EtxtNacionalidad.setText(this.vista.model.getValueAt(filaSeleccionada, 6).toString());
+        
+        this.vista.Etxtpass.setText(this.vista.model.getValueAt(filaSeleccionada, 7).toString());
         
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-        
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        
     }
 
     @Override
     public void mouseEntered(MouseEvent me) {
-        
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-        
     }
-    
-    
+
 }

@@ -44,7 +44,15 @@ public class ProductoDTO {
         this.descripcion = descripcion;
     }
 
-    
+    public ProductoDTO(String nombre, String codigo, String laboratorio, int stock, Double precio, String descripcion, int idProducto) {
+        this.nombre = nombre;
+        this.codigo = codigo;
+        this.laboratorio = laboratorio;
+        this.stock = stock;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.idProducto = idProducto;
+    }
     
     public int getIdProducto() {
         return idProducto;

@@ -47,6 +47,36 @@ public class FarmaceuticoDTO {
         this.contrasena = contrasena;
     }
 
+    public FarmaceuticoDTO(String nombre, String apellido, String fecNac, int edad, String direccion, String nacionalidad) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fecNac = fecNac;
+        this.edad = edad;
+        this.direccion = direccion;
+        this.nacionalidad = nacionalidad;
+    }
+
+    public FarmaceuticoDTO(String nombre, String apellido, String fecNac, int edad, String direccion, String nacionalidad, String contrasena) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fecNac = fecNac;
+        this.edad = edad;
+        this.direccion = direccion;
+        this.nacionalidad = nacionalidad;
+        this.contrasena = contrasena;
+    }
+    
+    public FarmaceuticoDTO(String nombre, String apellido, String fecNac, int edad, String direccion, String nacionalidad, String contrasena, int idFarmaceutico) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fecNac = fecNac;
+        this.edad = edad;
+        this.direccion = direccion;
+        this.nacionalidad = nacionalidad;
+        this.contrasena = contrasena;
+        this.idFarmaceutico = idFarmaceutico;
+    }
+
     public int getIdFarmaceutico() {
         return idFarmaceutico;
     }
