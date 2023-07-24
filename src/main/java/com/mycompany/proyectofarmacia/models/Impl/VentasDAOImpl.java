@@ -23,8 +23,8 @@ public class VentasDAOImpl implements VentasDAO {
     private Connection conexionTransaccional;
 
     private static final String SQL_SELECT = "SELECT * FROM ventas";
-    private static final String SQL_INSERT = "INSERT INTO ventas(id_factura, id_producto, id_farmaceutico, id_pago, fecha, moneda, nom_cliente, total) VALUES (?,?,?,?,?,?,?,?)";
-    private static final String SQL_UPDATE = "UPDATE ventas SET id_factura = ?,id_producto = ?,id_farmaceutico = ?,id_pago = ?,fecha = ?,moneda = ?,nom_cliente = ?,total = ? WHERE id_venta = ?";
+    private static final String SQL_INSERT = "INSERT INTO ventas(id_factura, id_farmaceutico, id_pago, fecha, moneda, nom_cliente, total) VALUES (?,?,?,?,?,?,?)";
+    private static final String SQL_UPDATE = "UPDATE ventas SET id_factura = ?,id_farmaceutico = ?,id_pago = ?,fecha = ?,moneda = ?,nom_cliente = ?,total = ? WHERE id_venta = ?";
     private static final String SQL_DELETE = "DELETE FROM ventas WHERE id_venta =?";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM ventas WHERE id_venta=?";
 
@@ -50,13 +50,12 @@ public class VentasDAOImpl implements VentasDAO {
             conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             stmt = conn.prepareStatement(SQL_INSERT);
             stmt.setInt(1, venta.getIdFactura());
-            stmt.setInt(2, venta.getIdProducto());
-            stmt.setInt(3, venta.getIdFarmaceutico());
-            stmt.setInt(4, venta.getIdPago());
-            stmt.setString(5, venta.getFecha());
-            stmt.setString(6, venta.getMoneda());
-            stmt.setString(7, venta.getNomCliente());
-            stmt.setDouble(8, venta.getTotal());
+            stmt.setInt(2, venta.getIdFarmaceutico());
+            stmt.setInt(3, venta.getIdPago());
+            stmt.setString(4, venta.getFecha());
+            stmt.setString(5, venta.getMoneda());
+            stmt.setString(6, venta.getNomCliente());
+            stmt.setDouble(7, venta.getTotal());
 
             registros = stmt.executeUpdate();
 
@@ -92,14 +91,13 @@ public class VentasDAOImpl implements VentasDAO {
             conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             stmt = conn.prepareStatement(SQL_UPDATE);
             stmt.setInt(1, venta.getIdFactura());
-            stmt.setInt(2, venta.getIdProducto());
-            stmt.setInt(3, venta.getIdFarmaceutico());
-            stmt.setInt(4, venta.getIdPago());
-            stmt.setString(5, venta.getFecha());
-            stmt.setString(6, venta.getMoneda());
-            stmt.setString(7, venta.getNomCliente());
-            stmt.setDouble(8, venta.getTotal());
-            stmt.setInt(9, venta.getIdVenta());
+            stmt.setInt(2, venta.getIdFarmaceutico());
+            stmt.setInt(3, venta.getIdPago());
+            stmt.setString(4, venta.getFecha());
+            stmt.setString(5, venta.getMoneda());
+            stmt.setString(6, venta.getNomCliente());
+            stmt.setDouble(7, venta.getTotal());
+            stmt.setInt(8, venta.getIdVenta());
 
             registros = stmt.executeUpdate();
 
@@ -178,7 +176,6 @@ public class VentasDAOImpl implements VentasDAO {
 
                 int idVenta = rs.getInt("id_venta");
                 int idFactura = rs.getInt("id_factura");
-                int idProducto = rs.getInt("id_producto");
                 int idFarmaceutico = rs.getInt("id_farmaceutico");
                 int idPago = rs.getInt("id_pago");
                 String fecha = rs.getString("fecha");
@@ -186,7 +183,7 @@ public class VentasDAOImpl implements VentasDAO {
                 String nomCliente = rs.getString("nom_cliente");
                 Double total = rs.getDouble("total");
 
-                venta = new VentasDTO(idVenta, idFactura, idProducto, idFarmaceutico, idPago, fecha, moneda, nomCliente, total);
+                venta = new VentasDTO(idVenta, idFactura, idFarmaceutico, idPago, fecha, moneda, nomCliente, total);
 
                 ventas.add(venta);
 
@@ -228,7 +225,6 @@ public class VentasDAOImpl implements VentasDAO {
             rs.next();//Nos posicionamos en el primer registro devuelto
 
             int idFactura = rs.getInt("id_factura");
-            int idProducto = rs.getInt("id_producto");
             int idFarmaceutico = rs.getInt("id_farmaceutico");
             int idPago = rs.getInt("id_pago");
             String fecha = rs.getString("fecha");
@@ -237,7 +233,6 @@ public class VentasDAOImpl implements VentasDAO {
             Double total = rs.getDouble("total");
 
             venta.setIdFactura(idFactura);
-            venta.setIdProducto(idProducto);
             venta.setIdFarmaceutico(idFarmaceutico);
             venta.setIdPago(idPago);
             venta.setFecha(fecha);

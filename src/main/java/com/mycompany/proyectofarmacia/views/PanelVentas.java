@@ -9,6 +9,10 @@ import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
 import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
 import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,23 +33,25 @@ public class PanelVentas extends JPanel {
     JLabel codProducto, nomProducto, labProducto, stock, descripcion, cantidad, busProducto, precio;
 
 //    ------
-    public JTextField txtusuario, txtfecha, txtcliente, txtcomprobante, ntxtcomprobante;
-    
-    public JComboBox txtmoneda, txtpago;
+    public JTextField txtusuario, txtfecha, txtcliente, ntxtcomprobante;
+
+    public JComboBox txtmoneda, txtpago, txtCantidad;
 
 //    TextField del producto
-    public JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtCantidad, txtPrecio;
+    public JTextField txtCodProducto, txtNomProducto, txtLabProducto, txtStock, txtDescripcion, txtPrecio;
 
 //    ------    
 //    Buttons del producto
     public JButton agregar, eliminar;
 
 //    ------  
-    public JButton realizarVenta, borrarVenta;
-    
+    public JButton realizarVenta, limpiar;
+
     public JTable jt;
 
     public DefaultTableModel model;
+
+    public JTextPane area;
 
     Box cajavertical = Box.createVerticalBox();
 
@@ -61,6 +67,11 @@ public class PanelVentas extends JPanel {
 
     Box cajaArea = Box.createHorizontalBox();
 
+//    Jtext del total
+    public JTextField total;
+    
+    public JLabel labelSim;
+
     public PanelVentas() {
 
         setLayout(new BorderLayout());
@@ -72,12 +83,11 @@ public class PanelVentas extends JPanel {
 
         //-----CREACION DE LBL Y TXT----------
         cajavertical.add(Box.createVerticalStrut(2));
-        
-        
+
         usuario = new JLabel("Usuario");
 
         txtusuario = new JTextField(11);
-        
+
         txtusuario.setEditable(false);
 
         caja1.add(usuario);
@@ -87,12 +97,11 @@ public class PanelVentas extends JPanel {
         caja1.add(txtusuario);
 
         caja1.add(Box.createHorizontalStrut(15));
-        
 
         fecha = new JLabel("Fecha");
 
         txtfecha = new JTextField(11);
-        
+
         txtfecha.setEditable(false);
 
         caja1.add(fecha);
@@ -102,7 +111,6 @@ public class PanelVentas extends JPanel {
         caja1.add(txtfecha);
 
         caja1.add(Box.createHorizontalStrut(15));
-        
 
         pago = new JLabel("Forma de pago");
 
@@ -115,14 +123,16 @@ public class PanelVentas extends JPanel {
         caja1.add(txtpago);
 
         caja1.add(Box.createHorizontalStrut(15));
-        
 
         moneda = new JLabel("Moneda");
 
         txtmoneda = new JComboBox();
-        
+
         txtmoneda.addItem("Soles");
         txtmoneda.addItem("Dolares");
+
+        //Para que cambie el simbolo en la caja
+        txtmoneda.addItemListener(new accionCombo());
 
         caja1.add(moneda);
 
@@ -131,7 +141,6 @@ public class PanelVentas extends JPanel {
         caja1.add(txtmoneda);
 
         caja1.add(Box.createHorizontalStrut(15));
-        
 
         cliente = new JLabel("Cliente");
 
@@ -144,19 +153,17 @@ public class PanelVentas extends JPanel {
         caja1.add(txtcliente);
 
         caja1.add(Box.createHorizontalStrut(15));
-        
 
         cajavertical.add(caja1);
 
         caja1.add(Box.createVerticalStrut(5));
-        
-        
+
         ncomprobante = new JLabel("Nº de comprobante");
 
         ntxtcomprobante = new JTextField(11);
-        
+
         ntxtcomprobante.setText(cadenaAleatoria());
-        
+
         ntxtcomprobante.setEditable(false);
 
         caja2.add(ncomprobante);
@@ -166,7 +173,6 @@ public class PanelVentas extends JPanel {
         caja2.add(ntxtcomprobante);
 
         caja2.add(Box.createHorizontalStrut(15));
-        
 
         cajavertical.add(caja2);
 
@@ -174,8 +180,7 @@ public class PanelVentas extends JPanel {
 
 //        Caja productos
         cajaProductos.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Producto"));
-        
-        
+
         nomProducto = new JLabel("Nombre");
 
         txtNomProducto = new JTextField(9);
@@ -187,19 +192,17 @@ public class PanelVentas extends JPanel {
         cajaProductos.add(txtNomProducto);
 
         cajaProductos.add(Box.createHorizontalStrut(10));
-       
 
         busProducto = new JLabel(new ImageIcon("src/main/java/resources/buscar.png"));
 
         cajaProductos.add(busProducto);
 
         cajaProductos.add(Box.createHorizontalStrut(15));
-        
-        
+
         codProducto = new JLabel("Codigo");
 
         txtCodProducto = new JTextField(9);
-        
+
         txtCodProducto.setEditable(false);
 
         cajaProductos.add(codProducto);
@@ -209,12 +212,11 @@ public class PanelVentas extends JPanel {
         cajaProductos.add(txtCodProducto);
 
         cajaProductos.add(Box.createHorizontalStrut(10));
-        
 
         labProducto = new JLabel("Laboratorio");
 
         txtLabProducto = new JTextField(9);
-        
+
         txtLabProducto.setEditable(false);
 
         cajaProductos.add(labProducto);
@@ -224,12 +226,11 @@ public class PanelVentas extends JPanel {
         cajaProductos.add(txtLabProducto);
 
         cajaProductos.add(Box.createHorizontalStrut(10));
-        
-    
+
         stock = new JLabel("Stock");
 
         txtStock = new JTextField(9);
-        
+
         txtStock.setEditable(false);
 
         cajaProductos.add(stock);
@@ -239,12 +240,11 @@ public class PanelVentas extends JPanel {
         cajaProductos.add(txtStock);
 
         cajaProductos.add(Box.createHorizontalStrut(10));
-        
 
         descripcion = new JLabel("Descripcion");
 
         txtDescripcion = new JTextField(16);
-        
+
         txtDescripcion.setEditable(false);
 
         cajaProductos.add(descripcion);
@@ -254,7 +254,6 @@ public class PanelVentas extends JPanel {
         cajaProductos.add(txtDescripcion);
 
         cajaProductos.add(Box.createHorizontalStrut(10));
-        
 
         cajavertical.add(cajaProductos);
 
@@ -269,11 +268,10 @@ public class PanelVentas extends JPanel {
         cajavertical.add(Box.createVerticalStrut(10));
 
 //        Cantidad, precio y botones
-        
         precio = new JLabel("Precio");
 
         txtPrecio = new JTextField(10);
-        
+
         txtPrecio.setEditable(false);
 
         caja3.add(precio);
@@ -283,11 +281,10 @@ public class PanelVentas extends JPanel {
         caja3.add(txtPrecio);
 
         caja3.add(Box.createHorizontalStrut(15));
-        
-        
+
         cantidad = new JLabel("Cantidad");
 
-        txtCantidad = new JTextField(10);
+        txtCantidad = new JComboBox();
 
         caja3.add(cantidad);
 
@@ -296,8 +293,10 @@ public class PanelVentas extends JPanel {
         caja3.add(txtCantidad);
 
         caja3.add(Box.createHorizontalStrut(15));
-        
-        
+
+        //Validamos la entrada de solo numeros a algunas cajas
+        txtCantidad.addKeyListener(new eventoTec());
+
         agregar = new JButton("Agregar", new ImageIcon("src/main/java/resources/agregar.png"));
 
         caja3.add(agregar);
@@ -309,13 +308,29 @@ public class PanelVentas extends JPanel {
         caja3.add(eliminar);
 
         caja3.add(Box.createHorizontalStrut(15));
+        
+        labelSim = new JLabel("S/.");
+        
+        caja3.add(labelSim);
+
+        total = new JTextField(8);
+
+        total.setText("0.00");
+
+        total.setEditable(false);
+
+        caja3.add(total);
+
+        caja3.add(Box.createHorizontalStrut(15));
 
         cajavertical.add(caja3);
 
         cajavertical.add(Box.createVerticalStrut(10));
 
 //        Creamos el pane llamando a la funcion correspondiente
-        JTextPane area = new JTextPane();
+        area = new JTextPane();
+
+        area.setEditable(false);
 
         area.setPreferredSize(new Dimension(1049, 200));
 
@@ -351,12 +366,12 @@ public class PanelVentas extends JPanel {
 
         realizarVenta = new JButton(tamimage("src/main/java/resources/venta.png"));
 
-        borrarVenta = new JButton(tamimage("src/main/java/resources/basura.png"));
+        limpiar = new JButton(tamimage("src/main/java/resources/basura.png"));
 
 //        Para que aparazca texto cuando nos ubicamos encima del button
         realizarVenta.setToolTipText("Realizar venta");
 
-        borrarVenta.setToolTipText("Limpiar");
+        limpiar.setToolTipText("Limpiar");
 
         caja3.add(Box.createVerticalStrut(180));
 
@@ -364,7 +379,7 @@ public class PanelVentas extends JPanel {
 
         caja3.add(Box.createVerticalStrut(10));
 
-        caja3.add(borrarVenta);
+        caja3.add(limpiar);
 
         izquierda.add(caja3);
 
@@ -411,8 +426,8 @@ public class PanelVentas extends JPanel {
         return resultado;
 
     }
-    
-        //    Para hallar un numero aleatorio
+
+    //    Para hallar un numero aleatorio
     public String cadenaAleatoria() {
         // El banco de caracteres
         String banco = "1234567890";
@@ -429,6 +444,50 @@ public class PanelVentas extends JPanel {
     public int numeroAleatorioEnRango(int minimo, int maximo) {
         // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
         return ThreadLocalRandom.current().nextInt(minimo, maximo + 1);
+    }
+
+    //    Clase para los eventos de las teclas
+    class eventoTec implements KeyListener {
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+
+//            Capturamos la tecla que presionamos
+            int key = ke.getKeyChar();
+
+//            validamos
+            if (((key < '0') || (key > '9')) && (key != '.')) {
+//                Este metodo evita que se coloque la tecla presionada
+                ke.consume();
+            }
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
+
+        }
+
+    }
+
+    class accionCombo implements ItemListener{
+
+        @Override
+        public void itemStateChanged(ItemEvent ie) {
+            
+            if (ie.getItem()=="Dolares") {
+                labelSim.setText("$");
+            }else{
+                labelSim.setText("S/.");
+            }
+            
+        }
+        
     }
 
 }

@@ -9,15 +9,26 @@ import com.mycompany.proyectofarmacia.models.DAO.ProductoDAO;
 import com.mycompany.proyectofarmacia.models.DTO.ProductoDTO;
 import com.mycompany.proyectofarmacia.models.Impl.ProductoDAOImpl;
 import com.mycompany.proyectofarmacia.views.PanelInventario;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -28,7 +39,7 @@ public class InventarioController implements ActionListener, MouseListener {
     private PanelInventario vista;
 
     private String nombre, codigo, laboratorio, stock, descripcion, precio;
-    
+
     private String id, nombreE, codigoE, laboratorioE, stockE, descripcionE, precioE;
 
 //    La creacion de este objeto recibira una instancia de la clase Login
@@ -41,10 +52,11 @@ public class InventarioController implements ActionListener, MouseListener {
         this.vista.btnLimpiar.addActionListener(this);
         this.vista.btnEditar.addActionListener(this);
         this.vista.btnEliminar.addActionListener(this);
+        this.vista.addExcel.addActionListener(this);
 
 //        Cargamos los datos en la tabla
         actualizarFilas();
-        
+
 //        Le damos accion a la tabla
         this.vista.jt.addMouseListener(this);
 
@@ -99,10 +111,10 @@ public class InventarioController implements ActionListener, MouseListener {
         }
 
     }
-    
+
 //    Para actualizar los datos
-    public void actualizar(){
-        
+    public void actualizar() {
+
         Connection conexion = null;
 
         try {
@@ -133,12 +145,12 @@ public class InventarioController implements ActionListener, MouseListener {
                 ex.printStackTrace(System.out);
             }
         }
-        
+
     }
-    
+
 //    Para eliminar
-    public void eliminar(){
-        
+    public void eliminar() {
+
         Connection conexion = null;
 
         try {
@@ -169,9 +181,9 @@ public class InventarioController implements ActionListener, MouseListener {
                 ex.printStackTrace(System.out);
             }
         }
-        
+
     }
-    
+
     public void actualizarFilas() {
 
         Connection conexion = null;
@@ -236,9 +248,9 @@ public class InventarioController implements ActionListener, MouseListener {
         this.precio = this.vista.txtPrecio.getText();
 
     }
-    
-    public void limpiarDatos(){
-        
+
+    public void limpiarDatos() {
+
         this.vista.txtNomProducto.setText("");
 
         this.vista.txtCodProducto.setText(cadenaAleatoria());
@@ -250,7 +262,7 @@ public class InventarioController implements ActionListener, MouseListener {
         this.vista.txtDescripcion.setText("");
 
         this.vista.txtPrecio.setText("");
-        
+
     }
 
     public boolean validarText() {
@@ -268,9 +280,8 @@ public class InventarioController implements ActionListener, MouseListener {
         }
 
     }
-    
+
 //    Lo mismo que arriba pero con las cajas de editar
-    
     public void capturarDatosE() {
 
         this.id = this.vista.txtId.getText();
@@ -288,11 +299,11 @@ public class InventarioController implements ActionListener, MouseListener {
         this.precioE = this.vista.txtEdiPrecio.getText();
 
     }
-    
-    public void limpiarDatosE(){
-        
+
+    public void limpiarDatosE() {
+
         this.vista.txtId.setText("");
-        
+
         this.vista.txtNomEditar.setText("");
 
         this.vista.txtCodEditar.setText(cadenaAleatoria());
@@ -304,7 +315,7 @@ public class InventarioController implements ActionListener, MouseListener {
         this.vista.txtEdiDescripcion.setText("");
 
         this.vista.txtEdiPrecio.setText("");
-        
+
     }
 
     public boolean validarTextE() {
@@ -337,7 +348,7 @@ public class InventarioController implements ActionListener, MouseListener {
                 registrar();
 
                 actualizarFilas();
-                
+
                 limpiarDatos();
 
             } else {
@@ -346,18 +357,18 @@ public class InventarioController implements ActionListener, MouseListener {
 
             }
 
-        }else if (press == this.vista.btnLimpiar) {
+        } else if (press == this.vista.btnLimpiar) {
 
             limpiarDatos();
-            
-        }else if(press == this.vista.btnEditar){
-            
+
+        } else if (press == this.vista.btnEditar) {
+
             if (validarTextE()) {
 
                 actualizar();
 
                 actualizarFilas();
-                
+
                 limpiarDatosE();
 
             } else {
@@ -365,19 +376,85 @@ public class InventarioController implements ActionListener, MouseListener {
                 JOptionPane.showMessageDialog(null, "Rellenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
-            
-        }else if(press == this.vista.btnEliminar){
-            
+
+        } else if (press == this.vista.btnEliminar) {
+
             eliminar();
-            
+
             actualizarFilas();
-                
+
             limpiarDatosE();
-            
+
+        } else if (press == this.vista.addExcel) {
+
+            try {
+
+//                Instanciamos la clase
+                JFileChooser chooser = new JFileChooser();
+//                El metodo showsavediaolog es el que muestra el cuadro de dialogo
+                chooser.showSaveDialog(this.vista);
+
+//                capturamos el archivo
+                File guardar = chooser.getSelectedFile();
+
+//                Validamos que se haya capturado una ruta
+                if (guardar != null) {
+
+//                    le pasamos la extension al archivo, file guardara una cadena
+                    guardar = new File(guardar.toString() + ".xlsx");
+//                    Aca creamos un libro de excel
+                    Workbook wb = new XSSFWorkbook();
+//                    Creamos una hoja dentro el libro de excel
+                    Sheet sheet = wb.createSheet("customer");
+
+//                    Se crea una fila dentro de la hoja   
+                    Row rowCol = sheet.createRow(0);
+//                    Recoremos las columnas de nuestra tabla
+                    for (int i = 0; i < this.vista.jt.getColumnCount(); i++) {
+//                        Creamos las celdas dentro del excel
+                        Cell cell = rowCol.createCell(i);
+//                        Asignamos un valor a las celdas
+                        cell.setCellValue(this.vista.jt.getColumnName(i));
+                    }
+
+                    for (int j = 0; j < this.vista.jt.getRowCount(); j++) {
+                        Row row = sheet.createRow(j);
+                        for (int k = 0; k < this.vista.jt.getColumnCount(); k++) {
+                            Cell cell = row.createCell(k);
+
+                            if (this.vista.jt.getValueAt(j, k) != null) {
+
+                                cell.setCellValue(this.vista.jt.getValueAt(j, k).toString());
+
+                            }
+
+                        }
+                    }
+//                    Escribimos los resultados en un fichero excel
+                    FileOutputStream out = new FileOutputStream(new File(guardar.toString()));
+                    wb.write(out);
+//                    Aca cerramos
+                    wb.close();
+                    out.close();
+
+                    abrirFile(guardar.toString());
+
+                } else {
+//                    En caso de que no se haya guardado me mostrara un mensaje
+                    JOptionPane.showMessageDialog(null, "Error al generar archivo", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+
+            } catch (FileNotFoundException e) {
+                System.out.println(e);
+            } catch (IOException ie) {
+                System.out.println(ie);
+            }
+
         }
     }
-    
-        //    Para hallar un numero aleatorio
+
+    //    Para hallar un numero aleatorio
     public String cadenaAleatoria() {
         // El banco de caracteres
         String banco = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -399,46 +476,58 @@ public class InventarioController implements ActionListener, MouseListener {
 //    Cuando implementamos la interfaz tenemos que cargar sus metodos
     @Override
     public void mouseClicked(MouseEvent me) {
-        
+
 //        Aca capturamos la fila seleccionada
         int filaSeleccionada = this.vista.jt.getSelectedRow();
-        
+
 //        Aca pasamos los valores a las cajas
         this.vista.txtId.setText(this.vista.model.getValueAt(filaSeleccionada, 0).toString());
-        
+
         this.vista.txtNomEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 1).toString());
-        
+
         this.vista.txtCodEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 2).toString());
-        
+
         this.vista.txtLabEditar.setText(this.vista.model.getValueAt(filaSeleccionada, 3).toString());
-        
+
         this.vista.txtEdiStock.setText(this.vista.model.getValueAt(filaSeleccionada, 4).toString());
-        
+
         this.vista.txtEdiPrecio.setText(this.vista.model.getValueAt(filaSeleccionada, 5).toString());
-        
+
         this.vista.txtEdiDescripcion.setText(this.vista.model.getValueAt(filaSeleccionada, 6).toString());
-        
+
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-        
+
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        
+
     }
 
     @Override
     public void mouseEntered(MouseEvent me) {
-        
+
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-        
+
     }
-    
-    
+
+//    Funcion para abrir el excel una vez lo hayamos guardado
+    public void abrirFile(String file) {
+
+        try {
+            File ruta = new File(file);
+//            Esto permite abrir e imprimir ficheros
+            Desktop.getDesktop().open(ruta);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
+
 }

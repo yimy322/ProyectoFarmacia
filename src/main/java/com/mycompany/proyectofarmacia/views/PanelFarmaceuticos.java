@@ -42,6 +42,9 @@ public class PanelFarmaceuticos extends JPanel {
     public JTable jt;
 
     public DefaultTableModel model;
+    
+//    JButton para exportar excel
+    public JButton addExcel;
 
     public PanelFarmaceuticos() {
 
@@ -151,7 +154,7 @@ public class PanelFarmaceuticos extends JPanel {
 
         crearTabla();
 
-        JButton addExcel = new JButton("Exportar tabla a excel", new ImageIcon("src/main/java/resources/excel.png"));
+        addExcel = new JButton("Exportar tabla a excel", new ImageIcon("src/main/java/resources/excel.png"));
 
         cajaVertical.add(caja2);
 

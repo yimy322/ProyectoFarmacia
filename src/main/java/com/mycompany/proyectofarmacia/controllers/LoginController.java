@@ -59,11 +59,7 @@ public class LoginController implements ActionListener{
     
 //    Valida que no haya campos vacios
     public void validar() {
-        if (this.vista.txtuser.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Completa todas las casillas","Login", JOptionPane.ERROR_MESSAGE);
-        } else if (this.vista.txtpass.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Completa todas las casillas","Login", JOptionPane.ERROR_MESSAGE);
-        } else if (this.vista.txtuser.getText().equals("") && this.vista.txtpass.getText().equals("")) {
+        if (this.vista.txtuser.getText().equals("") && this.vista.txtpass.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Completa todas las casillas","Login", JOptionPane.ERROR_MESSAGE);
         } else {
             ingresar();
@@ -74,7 +70,7 @@ public class LoginController implements ActionListener{
     public void ingresar() {
 
         Connection conexion = null;
-
+        
         try {
             conexion = Conexion.getConnection();
             if (conexion.getAutoCommit()) {

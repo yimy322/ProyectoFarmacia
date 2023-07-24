@@ -11,8 +11,11 @@
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/controllers/LoginController.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/controllers/FarmaceuticoController.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/Impl/PagoDAOImpl.java
+/home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/DAO/FacturaDAO.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/App.java
+/home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/DTO/FacturaDTO.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/DAO/PagoDAO.java
+/home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/Impl/FacturaDAOImpl.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/views/PanelFarmaceuticos.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/controllers/InventarioController.java
 /home/yimy/NetBeansProjects/ProyectoFarmacia/src/main/java/com/mycompany/proyectofarmacia/models/DTO/ProductoDTO.java

@@ -12,7 +12,6 @@ public class VentasDTO {
 
     private int idVenta;
     private int idFactura;
-    private int idProducto;
     private int idFarmaceutico;
     private int idPago;
     private String fecha;
@@ -27,10 +26,9 @@ public class VentasDTO {
         this.idVenta = idVenta;
     }
 
-    public VentasDTO(int idVenta, int idFactura, int idProducto, int idFarmaceutico, int idPago, String fecha, String moneda, String nomCliente, Double total) {
+    public VentasDTO(int idVenta, int idFactura, int idFarmaceutico, int idPago, String fecha, String moneda, String nomCliente, Double total) {
         this.idVenta = idVenta;
         this.idFactura = idFactura;
-        this.idProducto = idProducto;
         this.idFarmaceutico = idFarmaceutico;
         this.idPago = idPago;
         this.fecha = fecha;
@@ -39,6 +37,18 @@ public class VentasDTO {
         this.total = total;
     }
 
+    public VentasDTO(int idFactura, int idFarmaceutico, int idPago, String fecha, String moneda, String nomCliente, Double total) {
+        this.idFactura = idFactura;
+        this.idFarmaceutico = idFarmaceutico;
+        this.idPago = idPago;
+        this.fecha = fecha;
+        this.moneda = moneda;
+        this.nomCliente = nomCliente;
+        this.total = total;
+    }
+
+    
+    
     public int getIdVenta() {
         return idVenta;
     }
@@ -53,14 +63,6 @@ public class VentasDTO {
 
     public void setIdFactura(int idFactura) {
         this.idFactura = idFactura;
-    }
-
-    public int getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
     }
 
     public int getIdFarmaceutico() {

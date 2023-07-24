@@ -21,6 +21,10 @@ public class ProductoDTO {
     public ProductoDTO() {
     }
 
+    public ProductoDTO(String nombre) {
+        this.nombre = nombre;
+    }
+    
     public ProductoDTO(int idProducto) {
         this.idProducto = idProducto;
     }

@@ -26,7 +26,7 @@ public class ProductoDAOImpl implements ProductoDAO {
     private static final String SQL_INSERT = "INSERT INTO productos(nombre, codigo, laboratorio, stock, precio, descripcion) VALUES (?,?,?,?,?,?)";
     private static final String SQL_UPDATE = "UPDATE productos SET nombre = ?,codigo = ?,laboratorio = ?,stock = ?,precio = ?,descripcion = ? WHERE id_producto = ?";
     private static final String SQL_DELETE = "DELETE FROM productos WHERE id_producto =?";
-    private static final String SQL_SELECT_BY_ID = "SELECT * FROM productos WHERE id_producto=?";
+    private static final String SQL_SELECT_BY_ID = "SELECT * FROM productos WHERE nombre=?";
 
     public ProductoDAOImpl() {
     }
@@ -214,10 +214,11 @@ public class ProductoDAOImpl implements ProductoDAO {
         try {
             conn = Conexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT_BY_ID);
-            stmt.setInt(1, producto.getIdProducto());
+            stmt.setString(1, producto.getNombre());
             rs = stmt.executeQuery();
             rs.next();//Nos posicionamos en el primer registro devuelto
 
+            int id = rs.getInt("id_producto");
             String nombre = rs.getString("nombre");
             String codigo = rs.getString("codigo");
             String laboratorio = rs.getString("laboratorio");
@@ -225,6 +226,7 @@ public class ProductoDAOImpl implements ProductoDAO {
             Double precio = rs.getDouble("precio");
             String descripcion = rs.getString("descripcion");
 
+            producto.setIdProducto(id);
             producto.setNombre(nombre);
             producto.setCodigo(codigo);
             producto.setLaboratorio(laboratorio);

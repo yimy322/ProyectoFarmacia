@@ -26,6 +26,10 @@ public class FarmaceuticoDTO {
         this.idFarmaceutico = idFarmaceutico;
     }
 
+    public FarmaceuticoDTO(String nombre) {
+        this.nombre = nombre;
+    }
+
     public FarmaceuticoDTO(int idFarmaceutico, String nombre, String apellido, String fecNac, int edad, String direccion, String nacionalidad) {
         this.idFarmaceutico = idFarmaceutico;
         this.nombre = nombre;
@@ -65,7 +69,7 @@ public class FarmaceuticoDTO {
         this.nacionalidad = nacionalidad;
         this.contrasena = contrasena;
     }
-    
+
     public FarmaceuticoDTO(String nombre, String apellido, String fecNac, int edad, String direccion, String nacionalidad, String contrasena, int idFarmaceutico) {
         this.nombre = nombre;
         this.apellido = apellido;

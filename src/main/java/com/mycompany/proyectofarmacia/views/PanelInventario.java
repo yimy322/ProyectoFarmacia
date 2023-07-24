@@ -42,6 +42,9 @@ public class PanelInventario extends JPanel {
     public DefaultTableModel model;
 
 //    -----------
+    
+    public JButton addExcel;
+    
     public PanelInventario() {
 
         setLayout(new FlowLayout());
@@ -169,7 +172,7 @@ public class PanelInventario extends JPanel {
 
         cajaVertical1.add(cajaTabla);
 
-        JButton addExcel = new JButton("Exportar tabla a excel", new ImageIcon("src/main/java/resources/excel.png"));
+        addExcel = new JButton("Exportar tabla a excel", new ImageIcon("src/main/java/resources/excel.png"));
 
 //        Caja editar
         cajaEditar = Box.createHorizontalBox();

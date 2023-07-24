@@ -25,7 +25,7 @@ public class FarmaceuticoDAOImpl implements FarmaceuticoDAO {
     private static final String SQL_INSERT = "INSERT INTO farmaceuticos(nombre, apellido, fec_nac, edad, direccion, nacionalidad, contraseña) VALUES (?,?,?,?,?,?,?)";
     private static final String SQL_UPDATE = "UPDATE farmaceuticos SET nombre = ?,apellido = ?,fec_nac = ?,edad = ?,direccion = ?,nacionalidad = ?,contraseña = ? WHERE id_farmaceutico = ?";
     private static final String SQL_DELETE = "DELETE FROM farmaceuticos WHERE id_farmaceutico =?";
-    private static final String SQL_SELECT_BY_ID = "SELECT * FROM farmaceuticos WHERE id_farmaceutico=?";
+    private static final String SQL_SELECT_BY_ID = "SELECT * FROM farmaceuticos WHERE nombre=?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM farmaceuticos";
 
     public FarmaceuticoDAOImpl() {
@@ -219,10 +219,11 @@ public class FarmaceuticoDAOImpl implements FarmaceuticoDAO {
         try {
             conn = Conexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT_BY_ID);
-            stmt.setInt(1, farmaceutico.getIdFarmaceutico());
+            stmt.setString(1, farmaceutico.getNombre());
             rs = stmt.executeQuery();
             rs.next();//Nos posicionamos en el primer registro devuelto
 
+            int id = rs.getInt("id_farmaceutico");
             String nombre = rs.getString("nombre");
             String apellido = rs.getString("apellido");
             String fecNac = rs.getString("fec_nac");
@@ -230,6 +231,7 @@ public class FarmaceuticoDAOImpl implements FarmaceuticoDAO {
             String direccion = rs.getString("direccion");
             String nacionalidad = rs.getString("nacionalidad");
 
+            farmaceutico.setIdFarmaceutico(id);
             farmaceutico.setNombre(nombre);
             farmaceutico.setApellido(apellido);
             farmaceutico.setFecNac(fecNac);

@@ -16,6 +16,10 @@ public class PagoDTO {
     public PagoDTO() {
     }
 
+    public PagoDTO(String tipo) {
+        this.tipo = tipo;
+    }
+
     public PagoDTO(int idPago) {
         this.idPago = idPago;
     }

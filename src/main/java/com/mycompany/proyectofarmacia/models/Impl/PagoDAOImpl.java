@@ -19,7 +19,7 @@ public class PagoDAOImpl implements PagoDAO {
     private Connection conexionTransaccional;
 
     private static final String SQL_SELECT = "SELECT * FROM pagos";
-    private static final String SQL_SELECT_BY_ID = "SELECT * FROM pagos WHERE id_pago=?";
+    private static final String SQL_SELECT_BY_ID = "SELECT * FROM pagos WHERE tipo=?";
 
     public PagoDAOImpl() {
     }
@@ -87,12 +87,14 @@ public class PagoDAOImpl implements PagoDAO {
         try {
             conn = Conexion.getConnection();
             stmt = conn.prepareStatement(SQL_SELECT_BY_ID);
-            stmt.setInt(1, pago.getIdPago());
+            stmt.setString(1, pago.getTipo());
             rs = stmt.executeQuery();
             rs.next();//Nos posicionamos en el primer registro devuelto
 
+            int id = rs.getInt("id_pago");
             String tipo = rs.getString("tipo");
 
+            pago.setIdPago(id);
             pago.setTipo(tipo);
 
         } catch (SQLException ex) {
